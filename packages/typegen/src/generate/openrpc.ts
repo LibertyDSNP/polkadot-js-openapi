@@ -8,12 +8,10 @@ import type { ExtraTypes } from './types';
 
 import Handlebars from 'handlebars';
 
-import * as defaultDefs from '@polkadot/types/interfaces/definitions';
 import { Text } from '@polkadot/types/primitive';
-import lookupDefinitions from '@polkadot/types-augment/lookup/definitions';
 import { stringCamelCase } from '@polkadot/util';
 
-import { compareName, formatType, initMeta, readTemplate, writeFile } from '../util';
+import { compareName, initMeta, readTemplate, writeFile } from '../util';
 
 const MAPPED_NAMES: Record<string, string> = {
   class: 'clazz',
@@ -79,22 +77,6 @@ const typeToOpenRPCType = new Map<string, Object>([
 /** @internal */
 function generateForMeta (registry: Registry, meta: Metadata, dest: string, extraTypes: ExtraTypes, isStrict: boolean, customLookupDefinitions?: Definitions): void {
     writeFile(dest, (): string => {
-
-    const allTypes: ExtraTypes = {
-      '@polkadot/types-augment': {
-        lookup: {
-          ...lookupDefinitions,
-          ...customLookupDefinitions
-        }
-      },
-      '@polkadot/types/interfaces': defaultDefs,
-      ...extraTypes
-    };
-
-    const allDefs = Object.entries(allTypes).reduce((defs, [path, obj]) => {
-      return Object.entries(obj).reduce((defs, [key, value]) => ({ ...defs, [`${path}/${key}`]: value }), defs);
-    }, {});
-
 
     let allMethods: Object[] = [];
 
