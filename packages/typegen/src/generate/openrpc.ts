@@ -52,6 +52,14 @@ const typeToOpenRPCType = new Map<string, Object>([
   ["Compact<Weight>", {"type": "number"}]
 ]);
 
+// Unwrap a type if it is wrapper.  e.g.  Option<u32> is u32, Vec<u8> is u8, etc...
+function unwrapType(wrapper:string, aType:string): RegExpMatchArray | null {
+  const re = new RegExp('/' + wrapper + '<(.*?)>/', 'g');
+  const match = aType.match(re);
+  return match;
+}
+
+
 // function convertTypeToRPCType(aType: string): SchemaObject {
 //   let theType:string;
 //   let required: boolean = true;
