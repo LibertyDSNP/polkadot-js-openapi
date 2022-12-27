@@ -1,0 +1,42 @@
+{
+  "openrpc": "1.2.6",
+  "info": {
+    "version": "1.0.0",
+    "title": "Frequency API"
+  },
+  "methods": [
+{{#each allMethods}}
+    {
+      "name": "{{palletName}}/{{method.name}}",
+      "description": "",
+      "params": [
+{{#each method.params}}
+        {
+          "name": "{{name}}",
+          "description": "",
+          "required": "{{required}}",
+          "schema": {{{type}}}
+        }{{#unless @last}},{{/unless}}
+{{/each}}
+      ],
+      "result": {
+        "name": "",
+        "description": "",
+        "schema": {
+          "type": ""
+        }
+      }
+    }{{#unless @last}},{{/unless}}
+{{/each}}
+  ],
+  "components": {
+    "schemas": {
+      "Bytes": {
+        "title": "bytes",
+        "type": "string",
+        "description": "Hex representation of a variable length byte array",
+        "pattern": "^0x([a-fA-F0-9]?)+$"
+      }
+    }
+  }
+}

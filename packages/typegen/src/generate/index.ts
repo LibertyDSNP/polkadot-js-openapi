@@ -11,3 +11,4 @@ export { generateDefaultRpc } from './rpc';
 export { generateDefaultCalls } from './runtime';
 export { generateDefaultTsDef } from './tsDef';
 export { generateDefaultTx } from './tx';
+export { generateDefaultOpenRPC } from './openrpc';

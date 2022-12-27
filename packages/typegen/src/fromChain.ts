@@ -9,13 +9,18 @@ import yargs from 'yargs';
 import { Definitions } from '@polkadot/types/types';
 import { formatNumber } from '@polkadot/util';
 
-import { generateDefaultCalls, generateDefaultConsts, generateDefaultErrors, generateDefaultEvents, generateDefaultQuery, generateDefaultRpc, generateDefaultTx } from './generate';
+import { generateDefaultCalls, generateDefaultConsts, generateDefaultErrors, generateDefaultEvents, generateDefaultOpenRPC, generateDefaultQuery, generateDefaultRpc, generateDefaultTx } from './generate';
 import { assertDir, assertFile, getMetadataViaWs, HEADER, writeFile } from './util';
 
-function generate (metaHex: HexString, pkg: string | undefined, output: string, isStrict?: boolean): void {
+function generate (metaHex: HexString, pkg: string | undefined, output: string, isStrict?: boolean, isOpenRPC?: boolean): void {
   console.log(`Generating from metadata, ${formatNumber((metaHex.length - 2) / 2)} bytes`);
+  console.log(`generate(pkg: ${pkg || 'undefined'} output: ${output})`);
 
+  // WARNING: this directory must exist or the tool will fail silently!
   const outputPath = assertDir(path.join(process.cwd(), output));
+
+  // console.log(`outputPath=${outputPath}`);
+
   let extraTypes: Record<string, any> = {};
   let customLookupDefinitions: Definitions = { rpc: {}, types: {} };
 
@@ -40,6 +45,10 @@ function generate (metaHex: HexString, pkg: string | undefined, output: string, 
     console.error('ERROR: No lookup definitions found:', (error as Error).message);
   }
 
+  if (isOpenRPC === true) {
+    generateDefaultOpenRPC(path.join(outputPath, 'openrpc.json'), metaHex, extraTypes, isStrict, customLookupDefinitions);
+  }
+
   generateDefaultConsts(path.join(outputPath, 'augment-api-consts.ts'), metaHex, extraTypes, isStrict, customLookupDefinitions);
   generateDefaultErrors(path.join(outputPath, 'augment-api-errors.ts'), metaHex, extraTypes, isStrict);
   generateDefaultEvents(path.join(outputPath, 'augment-api-events.ts'), metaHex, extraTypes, isStrict, customLookupDefinitions);
@@ -47,7 +56,6 @@ function generate (metaHex: HexString, pkg: string | undefined, output: string, 
   generateDefaultRpc(path.join(outputPath, 'augment-api-rpc.ts'), extraTypes);
   generateDefaultTx(path.join(outputPath, 'augment-api-tx.ts'), metaHex, extraTypes, isStrict, customLookupDefinitions);
   generateDefaultCalls(path.join(outputPath, 'augment-api-runtime.ts'), metaHex, extraTypes, isStrict, customLookupDefinitions);
-
   writeFile(path.join(outputPath, 'augment-api.ts'), (): string =>
     [
       HEADER('chain'),
@@ -62,14 +70,18 @@ function generate (metaHex: HexString, pkg: string | undefined, output: string, 
   process.exit(0);
 }
 
-type ArgV = { endpoint: string; output: string; package?: string; strict?: boolean };
+type ArgV = { endpoint: string; openrpc?: boolean, output: string; package?: string; strict?: boolean };
 
 export function main (): void {
-  const { endpoint, output, package: pkg, strict: isStrict } = yargs.strict().options({
+  const { endpoint, openrpc: isOpenRPC, output, package: pkg, strict: isStrict } = yargs.strict().options({
     endpoint: {
       description: 'The endpoint to connect to (e.g. wss://kusama-rpc.polkadot.io) or relative path to a file containing the JSON output of an RPC state_getMetadata call',
       required: true,
       type: 'string'
+    },
+    openrpc: {
+      description: 'Generates an OpenRPC document',
+      type: 'boolean'
     },
     output: {
       description: 'The target directory to write the data to',
@@ -88,12 +100,12 @@ export function main (): void {
 
   if (endpoint.startsWith('wss://') || endpoint.startsWith('ws://')) {
     getMetadataViaWs(endpoint)
-      .then((metadata) => generate(metadata, pkg, output, isStrict))
+      .then((metadata) => generate(metadata, pkg, output, isStrict, isOpenRPC))
       .catch(() => process.exit(1));
   } else {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const metadata = (require(assertFile(path.join(process.cwd(), endpoint))) as Record<string, HexString>).result;
 
-    generate(metadata, pkg, output, isStrict);
+    generate(metadata, pkg, output, isStrict, isOpenRPC);
   }
 }
