@@ -13,8 +13,7 @@ import { Text } from '@polkadot/types/primitive';
 import lookupDefinitions from '@polkadot/types-augment/lookup/definitions';
 import { stringCamelCase } from '@polkadot/util';
 
-import { compareName, createImports, formatType, getSimilarTypes, initMeta, readTemplate, setImports, writeFile } from '../util';
-import { required } from 'yargs';
+import { compareName, formatType, initMeta, readTemplate, writeFile } from '../util';
 
 const MAPPED_NAMES: Record<string, string> = {
   class: 'clazz',
@@ -28,15 +27,6 @@ function mapName (_name: Text): string {
 
   return MAPPED_NAMES[name] || name;
 }
-
-// interface SchemaObject {
-//   type?: string
-//   properties?: Map<string, any>
-//   items?: [any]
-//   required?: [string]
-//   ref?: string
-// }
-
 
 const typeToOpenRPCType = new Map<string, Object>([
   ["string", {"type": "string"}],
@@ -101,19 +91,6 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
       ...extraTypes
     };
 
-    console.log("customLookupDefinitions=");
-    console.log(customLookupDefinitions);
-
-    //console.log("allTypes=");
-    //console.dir(allTypes['@polkadot/types/interfaces']["balances"]);
-
-
-    const imports = createImports(allTypes);
-
-    //console.log("imports=");
-    //console.log(imports);
-
-
     const allDefs = Object.entries(allTypes).reduce((defs, [path, obj]) => {
       return Object.entries(obj).reduce((defs, [key, value]) => ({ ...defs, [`${path}/${key}`]: value }), defs);
     }, {});
@@ -150,8 +127,6 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
 
               const params = typesInfo
               .map(([name,, typeStr]) => {
-                //const similarTypes = getSimilarTypes(registry, allDefs, typeStr, imports);
-
                 console.log("name:"+ name + " typeStr:" + typeStr);
 
                 let schemaObj = typeToOpenRPCType.get(typeStr);
@@ -171,9 +146,6 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
               });
 
             return {
-              args: typesInfo.map(([,, typeStr]) =>
-                formatType(registry, allDefs, typeStr, imports)
-              ).join(', '),
               docs,
               name: stringCamelCase(name),
               params
@@ -185,7 +157,7 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
           allMethods.push({ palletName: sectionName, method: item });
         }
       })
-      .sort(compareName);
+
 
     let json = generateForMetaTemplate({
       allMethods
