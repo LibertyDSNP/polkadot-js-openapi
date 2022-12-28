@@ -74,8 +74,9 @@ export const runtime: DefinitionsCall = {
               type: 'u32'
             }
           ],
-          // NOTE: _Should_ be V1 (as per current Substrate), however the interface was changed mid-flight between
-          // versions. So we have some of each depending on runtime. (We do detect the weight type, so correct)
+          // NOTE: _Should_ be V1 (as per current Substrate), however the interface was
+          // changed mid-flight between versions. So we have some of each depending on
+          // runtime. (We do detect the weight type, so correct)
           // type: 'RuntimeDispatchInfoV1'
           type: 'RuntimeDispatchInfo'
         }
@@ -117,9 +118,8 @@ export const runtime: DefinitionsCall = {
               type: 'u32'
             }
           ],
-          // NOTE: _Should_ be V1 (as per current Substrate), however the interface was changed mid-flight between
-          // versions. So we have some of each depending on runtime. (We do detect the weight type, so correct)
-          // type: 'RuntimeDispatchInfoV1'
+          // NOTE: As per the above comment, the below is correct according to Substrate, but
+          // _may_ yield fallback decoding on some versions of the runtime
           type: 'RuntimeDispatchInfo'
         }
       }, V1_V2_SHARED_CALL),

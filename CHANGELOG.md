@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 9.10.5 Dec 27, 2022
+
+Changes:
+
+- Revert 9.10.4 paymentInfo changes (fallback only works on struct, not `Weight`)
+
+
+## 9.10.4 Dec 25, 2022
+
+Changes:
+
+- Align runtime `paymentInfo` calls with Substrate (w/ decoding fallbacks)
+
+
 ## 9.10.3 Dec 17, 2022
 
 Changes:
