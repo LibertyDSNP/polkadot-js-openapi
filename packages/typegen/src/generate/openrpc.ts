@@ -139,6 +139,7 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
                   let theType = match[1];
                   console.log("Unwrapped "+ typeStr + " to " + theType);
                   typeStr = "array";
+                  // All array elements are the same type
                   let itemSchema = typeToOpenRPCType.get(theType);
                   items = itemSchema;
                 }
@@ -149,6 +150,12 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
                   const values = match[1].split(",");
                   console.log(`Matched tuple ${typeStr} with ${values.length} values: ${match[0]}`);
                   console.log(`Values: ${values}`);
+                  typeStr = "array";
+                  items = [];
+                  for (const v of values) {
+                    items.push({ type: v});
+                  }
+
                 }
 
                 let schemaObj = typeToOpenRPCType.get(typeStr);
