@@ -20,10 +20,20 @@
 {{/each}}
       ],
       "result": {
-        "name": "",
-        "description": "",
+        "name": "{{palletName}}/{{method.name}}",
         "schema": {
-          "type": ""
+          "type": "object",
+          "properties": {
+            "transactionHash": {
+              "type": "string"
+            },
+            "blockNumber": {
+              "type": "integer"
+            },
+            "blockHash": {
+              "type": "string"
+            }
+          }
         }
       }
     }{{#unless @last}},{{/unless}}

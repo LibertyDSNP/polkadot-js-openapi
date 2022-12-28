@@ -200,7 +200,6 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
 
     // console.dir(parsed);
     json = JSON.stringify(parsed, null, 2);
-
     return json;
   });
 }
