@@ -44,6 +44,7 @@ const typeToOpenRPCType = new Map<string, object>([
   ['PalletDemocracyVoteAccountVote', { $ref: '#/components/schemas/PalletDemocracyVoteAccountVote' }],
   ['PalletMsaAddKeyData', { $ref: '#/components/schemas/PalletMsaAddKeyData' }],
   ['PalletMsaAddProvider', { $ref: '#/components/schemas/PalletMsaAddProvider' }],
+  ['Perbill', { $ref: '#/components/schemas/Perbill' }],
   ['SpRuntimeHeader', { $ref: '#/components/schemas/SpRuntimeHeader' }],
   ['SpRuntimeMultiSignature', { $ref: '#/components/schemas/SpRuntimeMultiSignature' }],
   ['u8', { type: 'number' }],
