@@ -43,6 +43,12 @@
         "description": "Hex representation of a variable length byte array",
         "pattern": "^0x([a-fA-F0-9]?)+$"
       },
+      "H256": {
+        "title": "H256",
+        "type": "string",
+        "description": "H256 represents a 256-bit hash value",
+        "pattern": "^0x[a-fA-F\\d]{64}$"
+      },
       "MultiAddress": {
         "title": "MultiAddress",
         "type": "object",
@@ -52,7 +58,8 @@
            "type": "string"
           },
           "address": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]{32,34}$"
           }
         },
         "required": ["protocol", "address"]

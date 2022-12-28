@@ -30,7 +30,22 @@ const typeToOpenRPCType = new Map<string, object>([
   ['string', { type: 'string' }],
   ['AccountId32', { $ref: '#/components/schemas/AccountId32' }],
   ['Bytes', { $ref: '#/components/schemas/Bytes' }],
+  ['Call', { $ref: '#/components/schemas/Call' }],
+  ['CommonPrimitivesSchemaModelType', { $ref: '#/components/schemas/CommonPrimitivesSchemaModelType' }],
+  ['CommonPrimitivesSchemaPayloadLocation', { $ref: '#/components/schemas/CommonPrimitivesSchemaPayloadLocation' }],
+  ['CumulusPrimitivesParachainInherentParachainInherentData', { $ref: '#/components/schemas/CumulusPrimitivesParachainInherentParachainInherentData' }],
+  ['H256', { $ref: '#/components/schemas/H256' }],
+  ['FrameSupportScheduleMaybeHashed', { $ref: '#/components/schemas/FrameSupportScheduleMaybeHashed' }],
+  ['FrequencyRuntimeOriginCaller', { $ref: '#/components/schemas/FrequencyRuntimeOriginCaller' }],
+  ['FrequencyRuntimeSessionKeys', { $ref: '#/components/schemas/FrequencyRuntimeSessionKeys' }],
   ['MultiAddress', { $ref: '#/components/schemas/MultiAddress' }],
+  ['OrmlVestingVestingSchedule', { $ref: '#/components/schemas/OrmlVestingVestingSchedule' }],
+  ['PalletDemocracyConviction', { $ref: '#/components/schemas/PalletDemocracyConviction' }],
+  ['PalletDemocracyVoteAccountVote', { $ref: '#/components/schemas/PalletDemocracyVoteAccountVote' }],
+  ['PalletMsaAddKeyData', { $ref: '#/components/schemas/PalletMsaAddKeyData' }],
+  ['PalletMsaAddProvider', { $ref: '#/components/schemas/PalletMsaAddProvider' }],
+  ['SpRuntimeHeader', { $ref: '#/components/schemas/SpRuntimeHeader' }],
+  ['SpRuntimeMultiSignature', { $ref: '#/components/schemas/SpRuntimeMultiSignature' }],
   ['u8', { type: 'number' }],
   ['u16', { type: 'number' }],
   ['u32', { type: 'number' }],
@@ -41,13 +56,21 @@ const typeToOpenRPCType = new Map<string, object>([
   ['i32', { type: 'number' }],
   ['i64', { type: 'number' }],
   ['i128', { type: 'number' }],
-  ['Compact<Weight>', { type: 'number' }]
+  ['Weight', { type: 'number' }]
 ]);
 
 // Unwrap a type if it is wrapper.  e.g.  Option<u32> is u32, Vec<u8> is u8, etc...
 function unwrapType(wrapper: string, aType: string): RegExpMatchArray | null {
   let pattern = `${wrapper}<(.*?)>`;
   let regex = new RegExp(pattern);
+  const match = aType.match(regex);
+  return match;
+}
+
+// Unwrap a tuple.  e.g. (u32,u32), etc...
+function unwrapTuple(aType: string): RegExpMatchArray | null {
+  const regex =  /\(([^)]+)\)/;
+
   const match = aType.match(regex);
   return match;
 }
@@ -116,7 +139,16 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
                   let theType = match[1];
                   console.log("Unwrapped "+ typeStr + " to " + theType);
                   typeStr = "array";
-                  items = { type: theType};
+                  let itemSchema = typeToOpenRPCType.get(theType);
+                  items = itemSchema;
+                }
+
+                // Process tuple e.g. (u32,u32)
+                match = unwrapTuple(typeStr);
+                if (match) {
+                  const values = match[1].split(",");
+                  console.log(`Matched tuple ${typeStr} with ${values.length} values: ${match[0]}`);
+                  console.log(`Values: ${values}`);
                 }
 
                 let schemaObj = typeToOpenRPCType.get(typeStr);
