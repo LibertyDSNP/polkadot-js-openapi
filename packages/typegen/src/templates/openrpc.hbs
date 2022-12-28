@@ -31,11 +31,31 @@
   ],
   "components": {
     "schemas": {
+      "AccountId32": {
+        "title": "AccountId32",
+        "type": "string",
+        "description": "A 32-byte encoded account identifier used to identify accounts on the Polkadot network",
+        "pattern": "^[a-fA-F0-9]{64}$"
+      },
       "Bytes": {
         "title": "bytes",
         "type": "string",
         "description": "Hex representation of a variable length byte array",
         "pattern": "^0x([a-fA-F0-9]?)+$"
+      },
+      "MultiAddress": {
+        "title": "MultiAddress",
+        "type": "object",
+        "description": "Represents addresses on multiple different blockchain networks",
+        "properties": {
+          "protocol": {
+           "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        },
+        "required": ["protocol", "address"]
       }
     }
   }

@@ -26,69 +26,39 @@ function mapName (_name: Text): string {
   return MAPPED_NAMES[name] || name;
 }
 
-const typeToOpenRPCType = new Map<string, Object>([
-  ["string", {"type": "string"}],
-  ["Bytes", {"$ref": "#/components/schemas/Bytes"}],
-  ["u8", {"type": "number"}],
-  ["u16", {"type": "number"}],
-  ["u32", {"type": "number"}],
-  ["u64", {"type": "number"}],
-  ["u128", {"type": "number"}],
-  ["i8", {"type": "number"}],
-  ["i16", {"type": "number"}],
-  ["i32", {"type": "number"}],
-  ["i64", {"type": "number"}],
-  ["i128", {"type": "number"}],
-  ["Compact<u8>", {"type": "number"}],
-  ["Compact<u16>", {"type": "number"}],
-  ["Compact<u32>", {"type": "number"}],
-  ["Compact<u64>", {"type": "number"}],
-  ["Compact<u128>", {"type": "number"}],
-  ["Compact<i8>", {"type": "number"}],
-  ["Compact<i16>", {"type": "number"}],
-  ["Compact<i32>", {"type": "number"}],
-  ["Compact<i64>", {"type": "number"}],
-  ["Compact<i128>", {"type": "number"}],
-  ["Compact<Weight>", {"type": "number"}]
+const typeToOpenRPCType = new Map<string, object>([
+  ['string', { type: 'string' }],
+  ['AccountId32', { $ref: '#/components/schemas/AccountId32' }],
+  ['Bytes', { $ref: '#/components/schemas/Bytes' }],
+  ['MultiAddress', { $ref: '#/components/schemas/MultiAddress' }],
+  ['u8', { type: 'number' }],
+  ['u16', { type: 'number' }],
+  ['u32', { type: 'number' }],
+  ['u64', { type: 'number' }],
+  ['u128', { type: 'number' }],
+  ['i8', { type: 'number' }],
+  ['i16', { type: 'number' }],
+  ['i32', { type: 'number' }],
+  ['i64', { type: 'number' }],
+  ['i128', { type: 'number' }],
+  ['Compact<Weight>', { type: 'number' }]
 ]);
 
 // Unwrap a type if it is wrapper.  e.g.  Option<u32> is u32, Vec<u8> is u8, etc...
-function unwrapType(wrapper:string, aType:string): RegExpMatchArray | null {
-  const re = new RegExp('/' + wrapper + '<(.*?)>/', 'g');
-  const match = aType.match(re);
+function unwrapType(wrapper: string, aType: string): RegExpMatchArray | null {
+  let pattern = `${wrapper}<(.*?)>`;
+  let regex = new RegExp(pattern);
+  const match = aType.match(regex);
   return match;
 }
 
-
-// function convertTypeToRPCType(aType: string): SchemaObject {
-//   let theType:string;
-//   let required: boolean = true;
-
-//   const matchVec = aType.match(/Vec<(.*?)>/);  // arrays/vectors
-//   const matchOption = aType.match(/Option<(.*?)>/); // optional
-//   if (matchOption) {
-//     theType = matchOption[1];
-//     required = false;
-//   }
-//   else {
-//     theType = aType;
-//   }
-
-//   let rpcTypeObj = typeToOpenRPCType.get(theType);
-//   if (rpcTypeObj == undefined) {
-//     rpcTypeObj = {"type": "null"};
-//   }
-
-//   return rpcTypeObj;
-// }
-
 /** @internal */
 function generateForMeta (registry: Registry, meta: Metadata, dest: string, extraTypes: ExtraTypes, isStrict: boolean, customLookupDefinitions?: Definitions): void {
-    writeFile(dest, (): string => {
-
-    let allMethods: Object[] = [];
+  writeFile(dest, (): string => {
+    const allMethods: object[] = [];
 
     const { lookup, pallets } = meta.asLatest;
+
     pallets
       .sort(compareName)
       .filter(({ calls }) => calls.isSome)
@@ -97,7 +67,7 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
         // console.log("sectionName=" + sectionName);
         const items = lookup.getSiType(calls.unwrap().type).def.asVariant.variants
           .map(({ docs, fields, name }) => {
-            console.log("docs=" + docs);
+            // console.log("docs=" + docs);
 
             const typesInfo = fields.map(({ name, type, typeName }, index): [string, string, string] => {
               const typeDef = registry.lookup.getTypeDef(type);
@@ -115,24 +85,59 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
               ];
             });
 
-              const params = typesInfo
-              .map(([name,, typeStr]) => {
-                console.log("name:"+ name + " typeStr:" + typeStr);
+            const params = typesInfo
+              .map(([name, , typeStr]) => {
+                // console.log('name:' + name + ' typeStr:' + typeStr);
+
+                let match;
+
+                // Process Option<type>
+                let required = true;
+                match = unwrapType('Option', typeStr);
+                if (match) {
+                  let theType = match[1];
+                  required = false;
+                  console.log("Unwrapped "+ typeStr + " to " + theType);
+                  typeStr = theType;
+                }
+
+                // Process Compact<type>
+                match = unwrapType('Compact', typeStr);
+                if (match) {
+                  let theType = match[1];
+                  console.log("Unwrapped "+ typeStr + " to " + theType);
+                  typeStr = theType;
+                }
+
+                // Process Vec<type>
+                let items;
+                match = unwrapType('Vec', typeStr);
+                if (match) {
+                  let theType = match[1];
+                  console.log("Unwrapped "+ typeStr + " to " + theType);
+                  typeStr = "array";
+                  items = { type: theType};
+                }
 
                 let schemaObj = typeToOpenRPCType.get(typeStr);
-                if (schemaObj == undefined) {
-                  schemaObj = {};
+
+                if (schemaObj === undefined) {
+                  schemaObj = { type: typeStr };
+                }
+                if (typeStr == "array") {
+                  schemaObj = Object.assign({}, schemaObj, { items: items });
+                  // console.log("items=" + items);
                 }
 
                 console.dir(schemaObj);
 
-                let required: boolean = true;
                 const param = {
-                  name: name,
-                  required: required,
+                  name,
+                  required,
                   type: JSON.stringify(schemaObj, null, 1)
                 };
-               return param;
+
+                return param;
               });
 
             return {
@@ -144,18 +149,19 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
           .sort(compareName);
 
         for (const item of items) {
-          allMethods.push({ palletName: sectionName, method: item });
+          allMethods.push({ method: item, palletName: sectionName });
         }
-      })
-
+      });
 
     let json = generateForMetaTemplate({
       allMethods
     });
 
-    let parsed = JSON.parse(json);
-    //console.dir(parsed);
+    const parsed = JSON.parse(json);
+
+    // console.dir(parsed);
     json = JSON.stringify(parsed, null, 2);
+
     return json;
   });
 }
