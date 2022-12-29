@@ -43,26 +43,26 @@
     "schemas": {
       "AccountId32": {
         "title": "AccountId32",
-        "type": "string",
         "description": "A 32-byte encoded account identifier used to identify accounts on the Polkadot network",
+        "type": "string",
         "pattern": "^[a-fA-F0-9]{64}$"
       },
       "Bytes": {
         "title": "bytes",
-        "type": "string",
         "description": "Hex representation of a variable length byte array",
+        "type": "string",
         "pattern": "^0x([a-fA-F0-9]?)+$"
       },
       "H256": {
         "title": "H256",
-        "type": "string",
         "description": "H256 represents a 256-bit hash value",
+        "type": "string",
         "pattern": "^0x[a-fA-F\\d]{64}$"
       },
       "MultiAddress": {
         "title": "MultiAddress",
-        "type": "object",
         "description": "Represents addresses on multiple different blockchain networks",
+        "type": "object",
         "properties": {
           "protocol": {
            "type": "string"
@@ -73,6 +73,42 @@
           }
         },
         "required": ["protocol", "address"]
+      },
+      "PalletMsaAddKeyData": {
+        "title": "PalletMsaAddKeyData",
+        "description": "",
+        "type": "object",
+        "properties": {
+          "msa_id": {
+            "type": "integer"
+          },
+          "expiration": {
+            "type": "integer"
+          },
+          "new_public_key": {
+            "$ref": "#/components/schemas/AccountId32"
+          }
+        }
+      },
+      "PalletMsaAddProvider": {
+        "title": "PalletMsaAddProvider",
+        "description": "",
+        "type": "object",
+        "properties": {
+          "authorized_msa_id": {
+            "type": "integer"
+          },
+          "schema_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "expiration": {
+            "type": "integer"
+          }
+        },
+        "required": [ "authorized_msa_id", "expiration"]
       }
     }
   }
