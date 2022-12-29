@@ -61,21 +61,19 @@
       "CommonPrimitivesSchemaModelType": {
         "title": "CommonPrimitivesSchemaModelType",
         "description": "The schema model type",
-        "type": "enum",
+        "type": "string",
         "name": "ModelType",
-        "values": [
-         { "name": "AvroBinary" },
-         { "name": "Parquet" }
+        "enum": [
+          "AvroBinary", "Parquet"
         ]
       },
       "CommonPrimitivesSchemaPayloadLocation": {
         "title": "CommonPrimitivesSchemaPayloadLocation",
         "description": "The schema payload location",
-        "type": "enum",
+        "type": "string",
         "name": "PayloadLocation",
-        "values": [
-          { "name": "OnChain" },
-          { "name": "IPFS" }
+        "enum": [
+         "OnChain", "IPFS"
         ]
       },
       "CumulusPrimitivesParachainInherentParachainInherentData": {
@@ -114,11 +112,10 @@
       "FrameSupportScheduleMaybeHashed": {
         "title": "FrameSupportScheduleMaybeHashed",
         "description": "Type representing an encodable value or the hash of the encoding of such a value.",
-        "type": "enum",
+        "type": "string",
         "name": "MaybeHashed",
-        "values": [
-          { "name": "Value" },
-          { "name": "Hash" }
+        "emum": [
+          "Value", "Hash"
         ]
       },
       "FrequencyRuntimeOriginCaller": {
