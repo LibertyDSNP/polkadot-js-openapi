@@ -27,7 +27,19 @@ function mapName (_name: Text): string {
 }
 
 const typeToOpenRPCType = new Map<string, object>([
+  ['bool', { type: 'boolean' }],
   ['string', { type: 'string' }],
+  ['u8', { type: 'number' }],
+  ['u16', { type: 'number' }],
+  ['u32', { type: 'number' }],
+  ['u64', { type: 'number' }],
+  ['u128', { type: 'number' }],
+  ['i8', { type: 'number' }],
+  ['i16', { type: 'number' }],
+  ['i32', { type: 'number' }],
+  ['i64', { type: 'number' }],
+  ['i128', { type: 'number' }],
+  ['Weight', { type: 'number' }],
   ['AccountId32', { $ref: '#/components/schemas/AccountId32' }],
   ['Bytes', { $ref: '#/components/schemas/Bytes' }],
   ['Call', { $ref: '#/components/schemas/Call' }],
@@ -46,18 +58,7 @@ const typeToOpenRPCType = new Map<string, object>([
   ['PalletMsaAddProvider', { $ref: '#/components/schemas/PalletMsaAddProvider' }],
   ['Perbill', { $ref: '#/components/schemas/Perbill' }],
   ['SpRuntimeHeader', { $ref: '#/components/schemas/SpRuntimeHeader' }],
-  ['SpRuntimeMultiSignature', { $ref: '#/components/schemas/SpRuntimeMultiSignature' }],
-  ['u8', { type: 'number' }],
-  ['u16', { type: 'number' }],
-  ['u32', { type: 'number' }],
-  ['u64', { type: 'number' }],
-  ['u128', { type: 'number' }],
-  ['i8', { type: 'number' }],
-  ['i16', { type: 'number' }],
-  ['i32', { type: 'number' }],
-  ['i64', { type: 'number' }],
-  ['i128', { type: 'number' }],
-  ['Weight', { type: 'number' }]
+  ['SpRuntimeMultiSignature', { $ref: '#/components/schemas/SpRuntimeMultiSignature' }]
 ]);
 
 // Unwrap a type if it is wrapper.  e.g.  Option<u32> is u32, Vec<u8> is u8, etc...
@@ -154,7 +155,8 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
                   typeStr = "array";
                   items = [];
                   for (const v of values) {
-                    items.push({ type: v});
+                    let vtype = typeToOpenRPCType.get(v);
+                    items.push(vtype);
                   }
 
                 }
