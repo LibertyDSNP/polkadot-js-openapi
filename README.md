@@ -10,10 +10,38 @@ Looking for tutorials to get started? Look at [examples](https://polkadot.js.org
 
 # OpenRPC
 
-This fork includes a modified *typegen* utility that can generate an OpenRPC document.
+This fork includes a modified *typegen* utility that can generate an *OpenRPC* document.
+
+### Usage
 
 ```yarn polkadot-types-from-chain --openrpc --endpoint ws://127.0.0.1:9944 --output FOLDER_MUST_ALREADY_EXIST```
 
+### Note
+
+To add support for additional complex types, you must:
+
+* Add a ```$ref``` mapping for each to the code in ```openrpc.ts```:
+
+```['AccountId32', { $ref: '#/components/schemas/AccountId32' }],```
+
+
+* Add an entry to the *handlebars* template ```openrpc.hbs``` for the new complex type:
+
+```
+  "components": {
+    "schemas": {
+      "AccountId32": {
+        "title": "AccountId32",
+        "description": "A 32-byte encoded account identifier used to identify accounts on the Polkadot network",
+        "type": "string",
+        "pattern": "^[a-fA-F0-9]{64}$"
+      }
+    }
+  }
+```
+
 See also:
 
-https://open-rpc.org
+[OpenRPC](https://open-rpc.org)
+
+[handlebars](https://handlebarsjs.com)
