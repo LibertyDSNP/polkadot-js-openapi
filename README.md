@@ -7,3 +7,13 @@ If you are an existing user, please be sure to track the [CHANGELOG](CHANGELOG.m
 ## tutorials
 
 Looking for tutorials to get started? Look at [examples](https://polkadot.js.org/docs/api/examples/promise/) for guides on how to use the API to make queries and submit transactions.
+
+# OpenRPC
+
+This fork includes a modified *typegen* utility that can generate an OpenRPC document.
+
+```yarn polkadot-types-from-chain --openrpc --endpoint ws://127.0.0.1:9944 --output FOLDER_MUST_ALREADY_EXIST```
+
+See also:
+
+https://open-rpc.org
