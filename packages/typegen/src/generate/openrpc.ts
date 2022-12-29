@@ -12,6 +12,7 @@ import { Text } from '@polkadot/types/primitive';
 import { stringCamelCase } from '@polkadot/util';
 
 import { compareName, initMeta, readTemplate, writeFile } from '../util';
+import { DoNotConstruct } from '@polkadot/types-codec';
 
 const MAPPED_NAMES: Record<string, string> = {
   class: 'clazz',
@@ -95,7 +96,7 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
         // console.log("sectionName=" + sectionName);
         const items = lookup.getSiType(calls.unwrap().type).def.asVariant.variants
           .map(({ docs, fields, name }) => {
-            // console.log("docs=" + docs);
+           // console.log("name="+ name + " docs=" + docs);
 
             const typesInfo = fields.map(({ name, type, typeName }, index): [string, string, string] => {
               const typeDef = registry.lookup.getTypeDef(type);
@@ -161,7 +162,6 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
                     let vtype = typeToOpenRPCType.get(v);
                     items.push(vtype);
                   }
-
                 }
 
                 let schemaObj = typeToOpenRPCType.get(typeStr);
@@ -194,7 +194,24 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
           .sort(compareName);
 
         for (const item of items) {
-          allMethods.push({ method: item, palletName: sectionName });
+          let description: string = "";
+          if (item.docs === undefined) {
+            description = "";
+          }
+          else {
+            let first:boolean = true;
+            for (const line of item.docs) {
+              description = description + sanitize(line.toString());
+              if (first == true) {
+                first = false;
+              }
+              else {
+                description += ' ';
+              }
+            }
+          }
+          console.log(description);
+          allMethods.push({ method: item, palletName: sectionName, description: description});
         }
       });
 
@@ -208,6 +225,25 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
     json = JSON.stringify(parsed, null, 2);
     return json;
   });
+}
+
+function sanitize(comment: string): string {
+  let sanitized = "";
+
+  for (const c of comment) {
+    if (c.match(/[a-zA-Z0-9., #:;\[_%\]\/*->&'"`~<^$)(@!]/i)) {
+      sanitized += c;
+    }
+    else {
+      sanitized += ' ';
+    }
+  }
+
+  // if (comment != sanitized) {
+  //   console.log("BEFORE: |" + comment);
+  //   console.log("AFTER:  |" + sanitized);
+  // }
+  return sanitized;
 }
 
 // Call `generateForMeta()` with current static metadata
