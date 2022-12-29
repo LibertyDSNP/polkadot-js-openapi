@@ -53,11 +53,83 @@
         "type": "string",
         "pattern": "^0x([a-fA-F0-9]?)+$"
       },
+      "Call": {
+        "title": "Call",
+        "description": "",
+        "type": "string"
+      },
+      "CommonPrimitivesSchemaModelType": {
+        "title": "CommonPrimitivesSchemaModelType",
+        "description": "The schema model type",
+        "type": "enum",
+        "name": "ModelType",
+        "values": [
+         { "name": "AvroBinary" },
+         { "name": "Parquet" }
+        ]
+      },
+      "CommonPrimitivesSchemaPayloadLocation": {
+        "title": "CommonPrimitivesSchemaPayloadLocation",
+        "description": "The schema payload location",
+        "type": "enum",
+        "name": "PayloadLocation",
+        "values": [
+          { "name": "OnChain" },
+          { "name": "IPFS" }
+        ]
+      },
+      "CumulusPrimitivesParachainInherentParachainInherentData": {
+        "title": "CumulusPrimitivesParachainInherentParachainInherentData",
+        "description": "",
+        "type": "object",
+        "properties": {
+          "validation_data": {
+            "$ref": "PersistedValidationData"
+          },
+          "relay_chain_state": {
+            "$ref": "sp_trie_StorageProof"
+          },
+          "downward_messages": {
+            "type": "array",
+            "items": {
+              "$ref": "InboundDownwardMessage"
+            }
+          },
+          "horizontal_messages": {
+            "type": "object",
+            "name": "BTreeMap",
+            "properties": {
+              "key": { "$ref": "ParaId"},
+              "value": { "$ref": "InboundHrmpMessage"}
+            }
+          }
+        }
+      },
       "H256": {
         "title": "H256",
         "description": "H256 represents a 256-bit hash value",
         "type": "string",
         "pattern": "^0x[a-fA-F\\d]{64}$"
+      },
+      "FrameSupportScheduleMaybeHashed": {
+        "title": "FrameSupportScheduleMaybeHashed",
+        "description": "Type representing an encodable value or the hash of the encoding of such a value.",
+        "type": "enum",
+        "name": "MaybeHashed",
+        "values": [
+          { "name": "Value" },
+          { "name": "Hash" }
+        ]
+      },
+      "FrequencyRuntimeOriginCaller": {
+        "title": "FrequencyRuntimeOriginCaller",
+        "description": "",
+        "type": "string"
+      },
+      "FrequencyRuntimeSessionKeys": {
+        "title": "FrequencyRuntimeSessionKeys",
+        "description": "",
+        "type": "string"
       },
       "MultiAddress": {
         "title": "MultiAddress",
@@ -73,6 +145,21 @@
           }
         },
         "required": ["protocol", "address"]
+      },
+      "OrmlVestingVestingSchedule": {
+        "title": "OrmlVestingVestingSchedule",
+        "description": "",
+        "type": "string"
+      },
+      "PalletDemocracyConviction": {
+        "title": "PalletDemocracyConviction",
+        "description": "",
+        "type": "string"
+      },
+      "PalletDemocracyVoteAccountVote": {
+        "title": "PalletDemocracyVoteAccountVote",
+        "description": "",
+        "type": "string"
       },
       "PalletMsaAddKeyData": {
         "title": "PalletMsaAddKeyData",
@@ -109,6 +196,21 @@
           }
         },
         "required": [ "authorized_msa_id", "expiration"]
+      },
+      "Perbill": {
+        "title": "Perbill",
+        "description": "",
+        "type": "string"
+      },
+      "SpRuntimeHeader": {
+        "title": "SpRuntimeHeader",
+        "description": "",
+        "type": "string"
+      },
+      "SpRuntimeMultiSignature": {
+        "title": "SpRuntimeMultiSignature",
+        "description": "",
+        "type": "string"
       }
     }
   }
