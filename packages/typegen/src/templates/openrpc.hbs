@@ -1,0 +1,115 @@
+{
+  "openrpc": "1.2.6",
+  "info": {
+    "version": "1.0.0",
+    "title": "Frequency API"
+  },
+  "methods": [
+{{#each allMethods}}
+    {
+      "name": "{{palletName}}/{{method.name}}",
+      "description": "",
+      "params": [
+{{#each method.params}}
+        {
+          "name": "{{name}}",
+          "description": "",
+          "required": {{required}},
+          "schema": {{{type}}}
+        }{{#unless @last}},{{/unless}}
+{{/each}}
+      ],
+      "result": {
+        "name": "{{palletName}}/{{method.name}}",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "transactionHash": {
+              "type": "string"
+            },
+            "blockNumber": {
+              "type": "integer"
+            },
+            "blockHash": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }{{#unless @last}},{{/unless}}
+{{/each}}
+  ],
+  "components": {
+    "schemas": {
+      "AccountId32": {
+        "title": "AccountId32",
+        "description": "A 32-byte encoded account identifier used to identify accounts on the Polkadot network",
+        "type": "string",
+        "pattern": "^[a-fA-F0-9]{64}$"
+      },
+      "Bytes": {
+        "title": "bytes",
+        "description": "Hex representation of a variable length byte array",
+        "type": "string",
+        "pattern": "^0x([a-fA-F0-9]?)+$"
+      },
+      "H256": {
+        "title": "H256",
+        "description": "H256 represents a 256-bit hash value",
+        "type": "string",
+        "pattern": "^0x[a-fA-F\\d]{64}$"
+      },
+      "MultiAddress": {
+        "title": "MultiAddress",
+        "description": "Represents addresses on multiple different blockchain networks",
+        "type": "object",
+        "properties": {
+          "protocol": {
+           "type": "string"
+          },
+          "address": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]{32,34}$"
+          }
+        },
+        "required": ["protocol", "address"]
+      },
+      "PalletMsaAddKeyData": {
+        "title": "PalletMsaAddKeyData",
+        "description": "",
+        "type": "object",
+        "properties": {
+          "msa_id": {
+            "type": "integer"
+          },
+          "expiration": {
+            "type": "integer"
+          },
+          "new_public_key": {
+            "$ref": "#/components/schemas/AccountId32"
+          }
+        }
+      },
+      "PalletMsaAddProvider": {
+        "title": "PalletMsaAddProvider",
+        "description": "",
+        "type": "object",
+        "properties": {
+          "authorized_msa_id": {
+            "type": "integer"
+          },
+          "schema_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "expiration": {
+            "type": "integer"
+          }
+        },
+        "required": [ "authorized_msa_id", "expiration"]
+      }
+    }
+  }
+}
