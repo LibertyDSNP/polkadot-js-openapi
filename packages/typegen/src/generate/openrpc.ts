@@ -171,10 +171,7 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
                 }
                 if (typeStr == "array") {
                   schemaObj = Object.assign({}, schemaObj, { items: items });
-                  // console.log("items=" + items);
                 }
-
-                console.dir(schemaObj);
 
                 const param = {
                   name,
@@ -210,7 +207,7 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
               }
             }
           }
-          console.log(description);
+          // console.log(description);
           allMethods.push({ method: item, palletName: sectionName, description: description});
         }
       });
