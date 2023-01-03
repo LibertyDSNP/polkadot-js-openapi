@@ -19,6 +19,7 @@ Create a folder for the output file(s):
 ```mkdir output_directory```
 
 Install the project:
+
 ```yarn install```
 
 ### Usage
