@@ -1,221 +1,186 @@
 // Copyright 2017-2022 @polkadot/typegen authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { Metadata } from '@polkadot/types/metadata/Metadata';
-import type { Definitions, Registry } from '@polkadot/types/types';
-import type { HexString } from '@polkadot/util/types';
+import type { TypeRegistry } from '@polkadot/types/create';
+import type { Definitions } from '@polkadot/types/types';
 import type { ExtraTypes } from './types';
 
 import Handlebars from 'handlebars';
 
-import { Text } from '@polkadot/types/primitive';
-import { stringCamelCase } from '@polkadot/util';
+import * as defaultDefinitions from '@polkadot/types/interfaces/definitions';
+import staticSubstrate from '@polkadot/types-support/metadata/static-substrate';
 
-import { compareName, initMeta, readTemplate, writeFile } from '../util';
-import { DoNotConstruct } from '@polkadot/types-codec';
+import { createImports, formatType, getSimilarTypes, initMeta, readTemplate, setImports, writeFile } from '../util';
 
-const MAPPED_NAMES: Record<string, string> = {
-  class: 'clazz',
-  new: 'updated'
-};
-
-const generateForMetaTemplate = Handlebars.compile(readTemplate('openrpc'));
-
-function mapName (_name: Text): string {
-  const name = stringCamelCase(_name);
-
-  return MAPPED_NAMES[name] || name;
+interface ItemDef {
+  args: string;
+  docs: string[];
+  generic: string | undefined;
+  name: string;
+  type: string | undefined;
 }
 
-const typeToOpenRPCType = new Map<string, object>([
-  ['bool', { type: 'boolean' }],
-  ['string', { type: 'string' }],
-  ['u8', { type: 'integer' }],
-  ['u16', { type: 'integer' }],
-  ['u32', { type: 'integer' }],
-  ['u64', { type: 'integer' }],
-  ['u128', { type: 'integer' }],
-  ['i8', { type: 'integer' }],
-  ['i16', { type: 'integer' }],
-  ['i32', { type: 'integer' }],
-  ['i64', { type: 'integer' }],
-  ['i128', { type: 'integer' }],
-  ['BlockNumber', { type: 'integer' }],
-  ['MessageSourceId', { type: 'integer' }],
-  ['SchemaId', { type: 'integer' }],
-  ['Weight', { type: 'integer' }],
-  ['AccountId32', { $ref: '#/components/schemas/AccountId32' }],
-  ['Bytes', { $ref: '#/components/schemas/Bytes' }],
-  ['Call', { $ref: '#/components/schemas/Call' }],
-  ['CommonPrimitivesSchemaModelType', { $ref: '#/components/schemas/CommonPrimitivesSchemaModelType' }],
-  ['CommonPrimitivesSchemaPayloadLocation', { $ref: '#/components/schemas/CommonPrimitivesSchemaPayloadLocation' }],
-  ['CumulusPrimitivesParachainInherentParachainInherentData', { $ref: '#/components/schemas/CumulusPrimitivesParachainInherentParachainInherentData' }],
-  ['H256', { $ref: '#/components/schemas/H256' }],
-  ['FrameSupportScheduleMaybeHashed', { $ref: '#/components/schemas/FrameSupportScheduleMaybeHashed' }],
-  ['FrequencyRuntimeOriginCaller', { $ref: '#/components/schemas/FrequencyRuntimeOriginCaller' }],
-  ['FrequencyRuntimeSessionKeys', { $ref: '#/components/schemas/FrequencyRuntimeSessionKeys' }],
-  ['MultiAddress', { $ref: '#/components/schemas/MultiAddress' }],
-  ['OrmlVestingVestingSchedule', { $ref: '#/components/schemas/OrmlVestingVestingSchedule' }],
-  ['PalletDemocracyConviction', { $ref: '#/components/schemas/PalletDemocracyConviction' }],
-  ['PalletDemocracyVoteAccountVote', { $ref: '#/components/schemas/PalletDemocracyVoteAccountVote' }],
-  ['PalletMsaAddKeyData', { $ref: '#/components/schemas/PalletMsaAddKeyData' }],
-  ['PalletMsaAddProvider', { $ref: '#/components/schemas/PalletMsaAddProvider' }],
-  ['Perbill', { $ref: '#/components/schemas/Perbill' }],
-  ['SpRuntimeHeader', { $ref: '#/components/schemas/SpRuntimeHeader' }],
-  ['SpRuntimeMultiSignature', { $ref: '#/components/schemas/SpRuntimeMultiSignature' }]
-]);
-
-// Unwrap a type if it is wrapper.  e.g.  Option<u32> is u32, Vec<u8> is u8, etc...
-function unwrapType(wrapper: string, aType: string): RegExpMatchArray | null {
-  let pattern = `${wrapper}<(.*?)>`;
-  let regex = new RegExp(pattern);
-  const match = aType.match(regex);
-  return match;
+interface ModuleDef {
+  items: ItemDef[];
+  name: string;
 }
 
-// Unwrap a tuple.  e.g. (u32,u32), etc...
-function unwrapTuple(aType: string): RegExpMatchArray | null {
-  const regex =  /\(([^)]+)\)/;
+const StorageKeyType = 'StorageKey | string | Uint8Array | any';
 
-  const match = aType.match(regex);
-  return match;
-}
+const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
 
 /** @internal */
-function generateForMeta (registry: Registry, meta: Metadata, dest: string, extraTypes: ExtraTypes, isStrict: boolean, customLookupDefinitions?: Definitions): void {
+export function generateRpcTypes (registry: TypeRegistry, importDefinitions: Record<string, Definitions>, dest: string, extraTypes: ExtraTypes): void {
   writeFile(dest, (): string => {
-    const allMethods: object[] = [];
+    const allTypes: ExtraTypes = { '@polkadot/types/interfaces': importDefinitions, ...extraTypes };
+    const imports = createImports(allTypes);
+    const definitions = imports.definitions as Record<string, Definitions>;
+    const allDefs = Object.entries(allTypes).reduce((defs, [path, obj]) => {
+      return Object.entries(obj).reduce((defs, [key, value]) => ({ ...defs, [`${path}/${key}`]: value }), defs);
+    }, {});
 
-    const { lookup, pallets } = meta.asLatest;
+    const rpcKeys = Object
+      .keys(definitions)
+      .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
+      .sort();
 
-    pallets
-      .sort(compareName)
-      .filter(({ calls }) => calls.isSome)
-      .map(({ calls, name }) => {
-        const sectionName = stringCamelCase(name);
-        // console.log("sectionName=" + sectionName);
-        const items = lookup.getSiType(calls.unwrap().type).def.asVariant.variants
-          .map(({ docs, fields, name }) => {
-           // console.log("name="+ name + " docs=" + docs);
+    const allRPCMethods: object[] = [];
 
-            const typesInfo = fields.map(({ name, type, typeName }, index): [string, string, string] => {
-              const typeDef = registry.lookup.getTypeDef(type);
+    const additional: Record<string, ModuleDef> = {};
+    const modules = rpcKeys.map((sectionFullName) => {
+      const rpc = definitions[sectionFullName].rpc || {};
+      const section = sectionFullName.split('/').pop();
 
-              return [
-                name.isSome
-                  ? mapName(name.unwrap())
-                  : `param${index}`,
-                typeName.isSome
-                  ? typeName.toString()
-                  : typeDef.type,
-                typeDef.isFromSi
-                  ? typeDef.type
-                  : typeDef.lookupName || typeDef.type
-              ];
-            });
 
-            const params = typesInfo
-              .map(([name, , typeStr]) => {
-                // console.log('name:' + name + ' typeStr:' + typeStr);
+      const allMethods = Object.keys(rpc).sort().map((methodName) => {
+        const def = rpc[methodName];
 
-                let match;
+        let args;
+        let type;
+        let generic;
 
-                // Process Option<type>
-                let required = true;
-                match = unwrapType('Option', typeStr);
-                if (match) {
-                  let theType = match[1];
-                  required = false;
-                  console.log("Unwrapped "+ typeStr + " to " + theType);
-                  typeStr = theType;
-                }
+        // These are too hard to type with generics, do manual overrides
+        if (section === 'state') {
+          setImports(allDefs, imports, ['Codec', 'Hash', 'StorageKey', 'Vec']);
 
-                // Process Compact<type>
-                match = unwrapType('Compact', typeStr);
-                if (match) {
-                  let theType = match[1];
-                  console.log("Unwrapped "+ typeStr + " to " + theType);
-                  typeStr = theType;
-                }
-
-                // Process Vec<type>
-                let items;
-                match = unwrapType('Vec', typeStr);
-                if (match) {
-                  let theType = match[1];
-                  console.log("Unwrapped "+ typeStr + " to " + theType);
-                  typeStr = "array";
-                  // All array elements are the same type
-                  let itemSchema = typeToOpenRPCType.get(theType);
-                  items = itemSchema;
-                }
-
-                // Process tuple e.g. (u32,u32)
-                match = unwrapTuple(typeStr);
-                if (match) {
-                  const values = match[1].split(",");
-                  console.log(`Matched tuple ${typeStr} with ${values.length} values: ${match[0]}`);
-                  console.log(`Values: ${values}`);
-                  typeStr = "array";
-                  items = [];
-                  for (const v of values) {
-                    let vtype = typeToOpenRPCType.get(v);
-                    items.push(vtype);
-                  }
-                }
-
-                let schemaObj = typeToOpenRPCType.get(typeStr);
-
-                if (schemaObj === undefined) {
-                  schemaObj = { type: typeStr };
-                }
-                if (typeStr == "array") {
-                  schemaObj = Object.assign({}, schemaObj, { items: items });
-                }
-
-                const param = {
-                  name,
-                  required,
-                  type: JSON.stringify(schemaObj, null, 1)
-                };
-
-                return param;
-              });
-
-            return {
-              docs,
-              name: stringCamelCase(name),
-              params
-            };
-          })
-          .sort(compareName);
-
-        for (const item of items) {
-          let description: string = "";
-          if (item.docs === undefined) {
-            description = "";
+          if (methodName === 'getStorage') {
+            generic = 'T = Codec';
+            args = [`key: ${StorageKeyType}, block?: Hash | Uint8Array | string`];
+            type = 'T';
+          } else if (methodName === 'queryStorage') {
+            generic = 'T = Codec[]';
+            args = [`keys: Vec<StorageKey> | (${StorageKeyType})[], fromBlock?: Hash | Uint8Array | string, toBlock?: Hash | Uint8Array | string`];
+            type = '[Hash, T][]';
+          } else if (methodName === 'queryStorageAt') {
+            generic = 'T = Codec[]';
+            args = [`keys: Vec<StorageKey> | (${StorageKeyType})[], at?: Hash | Uint8Array | string`];
+            type = 'T';
+          } else if (methodName === 'subscribeStorage') {
+            generic = 'T = Codec[]';
+            args = [`keys?: Vec<StorageKey> | (${StorageKeyType})[]`];
+            type = 'T';
           }
-          else {
-            let first:boolean = true;
-            for (const line of item.docs) {
-              description = description + sanitize(line.toString());
-              if (first == true) {
-                first = false;
-              }
-              else {
-                description += ' ';
-              }
-            }
-          }
-          // console.log(description);
-          allMethods.push({ method: item, palletName: sectionName, description: description});
+
+          // TEST
+          args = [];
         }
-      });
 
-    let json = generateForMetaTemplate({
-      allMethods
+        if (args === undefined) {
+          setImports(allDefs, imports, [def.type]);
+
+          // args = def.params.map((param) => {
+          //   const similarTypes = getSimilarTypes(registry, definitions, param.type, imports);
+
+          //   setImports(allDefs, imports, [param.type, ...similarTypes]);
+
+          //   return `${param.name}${param.isOptional ? '?' : ''}: ${similarTypes.join(' | ')}`;
+          // });
+
+          type = formatType(registry, allDefs, def.type, imports);
+          generic = '';
+
+          // TEST
+          console.log(section + " / " + methodName );
+          //console.dir(def.params);
+          args = def.params;
+        }
+
+        let params = [];
+        for (const defp of def.params) {
+          let param = {
+            "name": "",
+            "description": "",
+            "required": false,
+            "schema": {
+            }
+          };
+          param.name = defp.name;
+          param.required = defp.isOptional ?? true;
+          param.schema = JSON.stringify({
+            "$ref": "#/components/schema/" + defp.type
+          },null,1);
+          params.push(param);
+        }
+
+        const item = {
+          pallet: section,
+          name: methodName,
+          params: params,
+          result: type
+        }
+
+        allRPCMethods.push(item);
+        // const item = {
+        //   args: args,
+        //   docs: def.deprecated
+        //     ? [`@deprecated ${def.deprecated}`, def.description]
+        //     : [def.description],
+        //   generic,
+        //   name: methodName,
+        //   type
+        // };
+
+        if (def.aliasSection) {
+          if (!additional[def.aliasSection]) {
+            additional[def.aliasSection] = {
+              items: [],
+              name: def.aliasSection
+            };
+          }
+
+          additional[def.aliasSection].items.push(item);
+
+          return null;
+        }
+
+        return item;
+      }).filter((item): item is ItemDef => !!item);
+
+      return {
+        items: allMethods,
+        name: section || 'unknown'
+      };
+    }).concat(...Object.values(additional)).sort((a, b) => a.name.localeCompare(b.name));
+
+    imports.typesTypes.Observable = true;
+
+    let json = generateRpcTypesTemplate({
+      headerType: 'chain',
+      imports,
+      modules,
+      allRPCMethods,
+      types: [
+        ...Object.keys(imports.localTypes).sort().map((packagePath): { file: string; types: string[] } => ({
+          file: packagePath.replace('@polkadot/types-augment', '@polkadot/types'),
+          types: Object.keys(imports.localTypes[packagePath])
+        })),
+        {
+          file: '@polkadot/rpc-core/types',
+          types: ['AugmentedRpc']
+        }
+      ]
     });
-
+    console.log(json);
     const parsed = JSON.parse(json);
 
     // console.dir(parsed);
@@ -224,29 +189,13 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
   });
 }
 
-function sanitize(comment: string): string {
-  let sanitized = "";
+export function generateDefaultOpenRPC (dest:string, extraTypes: ExtraTypes = {}): void {
+  const { registry } = initMeta(staticSubstrate, extraTypes);
 
-  for (const c of comment) {
-    if (c.match(/[a-zA-Z0-9., #:;\[_%\]\/*->&'"`~<^$)(@!]/i)) {
-      sanitized += c;
-    }
-    else {
-      sanitized += ' ';
-    }
-  }
-
-  // if (comment != sanitized) {
-  //   console.log("BEFORE: |" + comment);
-  //   console.log("AFTER:  |" + sanitized);
-  // }
-  return sanitized;
-}
-
-// Call `generateForMeta()` with current static metadata
-/** @internal */
-export function generateDefaultOpenRPC (dest: string, data: HexString, extraTypes: ExtraTypes = {}, isStrict = false, customLookupDefinitions?: Definitions): void {
-  const { metadata, registry } = initMeta(data, extraTypes);
-
-  return generateForMeta(registry, metadata, dest, extraTypes, isStrict, customLookupDefinitions);
+  generateRpcTypes(
+    registry,
+    defaultDefinitions,
+    dest,
+    extraTypes
+  );
 }

@@ -46,7 +46,7 @@ function generate (metaHex: HexString, pkg: string | undefined, output: string, 
   }
 
   if (isOpenRPC === true) {
-    generateDefaultOpenRPC(path.join(outputPath, 'openrpc.json'), metaHex, extraTypes, isStrict, customLookupDefinitions);
+    generateDefaultOpenRPC(path.join(outputPath, 'openrpc.json'), extraTypes);
   }
 
   generateDefaultConsts(path.join(outputPath, 'augment-api-consts.ts'), metaHex, extraTypes, isStrict, customLookupDefinitions);

@@ -1,0 +1,2036 @@
+{
+  "openrpc": "1.2.6",
+  "info": {
+    "version": "1.0.0",
+    "title": "Frequency API"
+  },
+  "methods": [
+    {
+      "name": "hasKey",
+      "params": [
+        {
+          "name": "publicKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        },
+        {
+          "name": "keyType",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Text"
+          }
+        }
+      ]
+    },
+    {
+      "name": "hasSessionKeys",
+      "params": [
+        {
+          "name": "sessionKeys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "insertKey",
+      "params": [
+        {
+          "name": "keyType",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Text"
+          }
+        },
+        {
+          "name": "suri",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Text"
+          }
+        },
+        {
+          "name": "publicKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "pendingExtrinsics",
+      "params": []
+    },
+    {
+      "name": "removeExtrinsic",
+      "params": [
+        {
+          "name": "bytesOrHash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<ExtrinsicOrHash>"
+          }
+        }
+      ]
+    },
+    {
+      "name": "rotateKeys",
+      "params": []
+    },
+    {
+      "name": "submitAndWatchExtrinsic",
+      "params": [
+        {
+          "name": "extrinsic",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Extrinsic"
+          }
+        }
+      ]
+    },
+    {
+      "name": "submitExtrinsic",
+      "params": [
+        {
+          "name": "extrinsic",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Extrinsic"
+          }
+        }
+      ]
+    },
+    {
+      "name": "epochAuthorship",
+      "params": []
+    },
+    {
+      "name": "getFinalizedHead",
+      "params": []
+    },
+    {
+      "name": "subscribeJustifications",
+      "params": []
+    },
+    {
+      "name": "getBlock",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getBlockHash",
+      "params": [
+        {
+          "name": "blockNumber",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getFinalizedHead",
+      "params": []
+    },
+    {
+      "name": "getHeader",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "subscribeAllHeads",
+      "params": []
+    },
+    {
+      "name": "subscribeFinalizedHeads",
+      "params": []
+    },
+    {
+      "name": "subscribeNewHeads",
+      "params": []
+    },
+    {
+      "name": "getKeys",
+      "params": [
+        {
+          "name": "childKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/PrefixedStorageKey"
+          }
+        },
+        {
+          "name": "prefix",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getKeysPaged",
+      "params": [
+        {
+          "name": "childKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/PrefixedStorageKey"
+          }
+        },
+        {
+          "name": "prefix",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "count",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/u32"
+          }
+        },
+        {
+          "name": "startKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorage",
+      "params": [
+        {
+          "name": "childKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/PrefixedStorageKey"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorageEntries",
+      "params": [
+        {
+          "name": "childKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/PrefixedStorageKey"
+          }
+        },
+        {
+          "name": "keys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<StorageKey>"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorageHash",
+      "params": [
+        {
+          "name": "childKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/PrefixedStorageKey"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorageSize",
+      "params": [
+        {
+          "name": "childKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/PrefixedStorageKey"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "call",
+      "params": [
+        {
+          "name": "callRequest",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/ContractCallRequest"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorage",
+      "params": [
+        {
+          "name": "address",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/AccountId"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "instantiate",
+      "params": [
+        {
+          "name": "request",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/InstantiateRequestV1"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "rentProjection",
+      "params": [
+        {
+          "name": "address",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/AccountId"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "uploadCode",
+      "params": [
+        {
+          "name": "uploadRequest",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/CodeUploadRequest"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getBlockStats",
+      "params": [
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "createBlock",
+      "params": [
+        {
+          "name": "createEmpty",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/bool"
+          }
+        },
+        {
+          "name": "finalize",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/bool"
+          }
+        },
+        {
+          "name": "parentHash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "finalizeBlock",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        },
+        {
+          "name": "justification",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Justification"
+          }
+        }
+      ]
+    },
+    {
+      "name": "accounts",
+      "params": []
+    },
+    {
+      "name": "blockNumber",
+      "params": []
+    },
+    {
+      "name": "call",
+      "params": [
+        {
+          "name": "request",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/EthCallRequest"
+          }
+        },
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "chainId",
+      "params": []
+    },
+    {
+      "name": "clientVersion",
+      "params": []
+    },
+    {
+      "name": "coinbase",
+      "params": []
+    },
+    {
+      "name": "estimateGas",
+      "params": [
+        {
+          "name": "request",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/EthCallRequest"
+          }
+        },
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "feeHistory",
+      "params": [
+        {
+          "name": "blockCount",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        },
+        {
+          "name": "newestBlock",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        },
+        {
+          "name": "rewardPercentiles",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Option<Vec<f64>>"
+          }
+        }
+      ]
+    },
+    {
+      "name": "gasPrice",
+      "params": []
+    },
+    {
+      "name": "getBalance",
+      "params": [
+        {
+          "name": "address",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H160"
+          }
+        },
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getBlockByHash",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        },
+        {
+          "name": "full",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/bool"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getBlockByNumber",
+      "params": [
+        {
+          "name": "block",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        },
+        {
+          "name": "full",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/bool"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getBlockTransactionCountByHash",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getBlockTransactionCountByNumber",
+      "params": [
+        {
+          "name": "block",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getCode",
+      "params": [
+        {
+          "name": "address",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H160"
+          }
+        },
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getFilterChanges",
+      "params": [
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getFilterLogs",
+      "params": [
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getLogs",
+      "params": [
+        {
+          "name": "filter",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/EthFilter"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getProof",
+      "params": [
+        {
+          "name": "address",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H160"
+          }
+        },
+        {
+          "name": "storageKeys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<H256>"
+          }
+        },
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorageAt",
+      "params": [
+        {
+          "name": "address",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H160"
+          }
+        },
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        },
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getTransactionByBlockHashAndIndex",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        },
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getTransactionByBlockNumberAndIndex",
+      "params": [
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        },
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getTransactionByHash",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getTransactionCount",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        },
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getTransactionReceipt",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getUncleByBlockHashAndIndex",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        },
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getUncleByBlockNumberAndIndex",
+      "params": [
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        },
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getUncleCountByBlockHash",
+      "params": [
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getUncleCountByBlockNumber",
+      "params": [
+        {
+          "name": "number",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getWork",
+      "params": []
+    },
+    {
+      "name": "hashrate",
+      "params": []
+    },
+    {
+      "name": "listening",
+      "params": []
+    },
+    {
+      "name": "maxPriorityFeePerGas",
+      "params": []
+    },
+    {
+      "name": "mining",
+      "params": []
+    },
+    {
+      "name": "newBlockFilter",
+      "params": []
+    },
+    {
+      "name": "newFilter",
+      "params": [
+        {
+          "name": "filter",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/EthFilter"
+          }
+        }
+      ]
+    },
+    {
+      "name": "newPendingTransactionFilter",
+      "params": []
+    },
+    {
+      "name": "peerCount",
+      "params": []
+    },
+    {
+      "name": "protocolVersion",
+      "params": []
+    },
+    {
+      "name": "sendRawTransaction",
+      "params": [
+        {
+          "name": "bytes",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "sendTransaction",
+      "params": [
+        {
+          "name": "tx",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/EthTransactionRequest"
+          }
+        }
+      ]
+    },
+    {
+      "name": "sha3",
+      "params": [
+        {
+          "name": "data",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "submitHashrate",
+      "params": [
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        },
+        {
+          "name": "hash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "submitWork",
+      "params": [
+        {
+          "name": "nonce",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H64"
+          }
+        },
+        {
+          "name": "headerHash",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        },
+        {
+          "name": "mixDigest",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/H256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "subscribe",
+      "params": [
+        {
+          "name": "kind",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/EthSubKind"
+          }
+        },
+        {
+          "name": "params",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/EthSubParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "syncing",
+      "params": []
+    },
+    {
+      "name": "uninstallFilter",
+      "params": [
+        {
+          "name": "index",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/U256"
+          }
+        }
+      ]
+    },
+    {
+      "name": "version",
+      "params": []
+    },
+    {
+      "name": "proveFinality",
+      "params": [
+        {
+          "name": "blockNumber",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockNumber"
+          }
+        }
+      ]
+    },
+    {
+      "name": "roundState",
+      "params": []
+    },
+    {
+      "name": "subscribeJustifications",
+      "params": []
+    },
+    {
+      "name": "generateBatchProof",
+      "params": [
+        {
+          "name": "leafIndices",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<u64>"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "generateProof",
+      "params": [
+        {
+          "name": "leafIndex",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/u64"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "localStorageGet",
+      "params": [
+        {
+          "name": "kind",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKind"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "localStorageSet",
+      "params": [
+        {
+          "name": "kind",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKind"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        },
+        {
+          "name": "value",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "queryFeeDetails",
+      "params": [
+        {
+          "name": "extrinsic",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "queryInfo",
+      "params": [
+        {
+          "name": "extrinsic",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "methods",
+      "params": []
+    },
+    {
+      "name": "call",
+      "params": [
+        {
+          "name": "method",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Text"
+          }
+        },
+        {
+          "name": "data",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getChildKeys",
+      "params": [
+        {
+          "name": "childStorageKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childDefinition",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childType",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/u32"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getChildReadProof",
+      "params": [
+        {
+          "name": "childStorageKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/PrefixedStorageKey"
+          }
+        },
+        {
+          "name": "keys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<StorageKey>"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getChildStorage",
+      "params": [
+        {
+          "name": "childStorageKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childDefinition",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childType",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/u32"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getChildStorageHash",
+      "params": [
+        {
+          "name": "childStorageKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childDefinition",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childType",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/u32"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getChildStorageSize",
+      "params": [
+        {
+          "name": "childStorageKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childDefinition",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "childType",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/u32"
+          }
+        },
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getKeys",
+      "params": [
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getKeysPaged",
+      "params": [
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "count",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/u32"
+          }
+        },
+        {
+          "name": "startKey",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getMetadata",
+      "params": [
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getPairs",
+      "params": [
+        {
+          "name": "prefix",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getReadProof",
+      "params": [
+        {
+          "name": "keys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<StorageKey>"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getRuntimeVersion",
+      "params": [
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorage",
+      "params": [
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorageHash",
+      "params": [
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "getStorageSize",
+      "params": [
+        {
+          "name": "key",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/StorageKey"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "queryStorage",
+      "params": [
+        {
+          "name": "keys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<StorageKey>"
+          }
+        },
+        {
+          "name": "fromBlock",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        },
+        {
+          "name": "toBlock",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "queryStorageAt",
+      "params": [
+        {
+          "name": "keys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<StorageKey>"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "subscribeRuntimeVersion",
+      "params": []
+    },
+    {
+      "name": "subscribeStorage",
+      "params": [
+        {
+          "name": "keys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Vec<StorageKey>"
+          }
+        }
+      ]
+    },
+    {
+      "name": "traceBlock",
+      "params": [
+        {
+          "name": "block",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Hash"
+          }
+        },
+        {
+          "name": "targets",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Option<Text>"
+          }
+        },
+        {
+          "name": "storageKeys",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Option<Text>"
+          }
+        },
+        {
+          "name": "methods",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Option<Text>"
+          }
+        }
+      ]
+    },
+    {
+      "name": "trieMigrationStatus",
+      "params": [
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "genSyncSpec",
+      "params": [
+        {
+          "name": "raw",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/bool"
+          }
+        }
+      ]
+    },
+    {
+      "name": "accountNextIndex",
+      "params": [
+        {
+          "name": "accountId",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/AccountId"
+          }
+        }
+      ]
+    },
+    {
+      "name": "addLogFilter",
+      "params": [
+        {
+          "name": "directives",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Text"
+          }
+        }
+      ]
+    },
+    {
+      "name": "addReservedPeer",
+      "params": [
+        {
+          "name": "peer",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Text"
+          }
+        }
+      ]
+    },
+    {
+      "name": "chain",
+      "params": []
+    },
+    {
+      "name": "chainType",
+      "params": []
+    },
+    {
+      "name": "dryRun",
+      "params": [
+        {
+          "name": "extrinsic",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        },
+        {
+          "name": "at",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/BlockHash"
+          }
+        }
+      ]
+    },
+    {
+      "name": "health",
+      "params": []
+    },
+    {
+      "name": "localListenAddresses",
+      "params": []
+    },
+    {
+      "name": "localPeerId",
+      "params": []
+    },
+    {
+      "name": "name",
+      "params": []
+    },
+    {
+      "name": "networkState",
+      "params": []
+    },
+    {
+      "name": "nodeRoles",
+      "params": []
+    },
+    {
+      "name": "peers",
+      "params": []
+    },
+    {
+      "name": "properties",
+      "params": []
+    },
+    {
+      "name": "removeReservedPeer",
+      "params": [
+        {
+          "name": "peerId",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Text"
+          }
+        }
+      ]
+    },
+    {
+      "name": "reservedPeers",
+      "params": []
+    },
+    {
+      "name": "resetLogFilter",
+      "params": []
+    },
+    {
+      "name": "syncState",
+      "params": []
+    },
+    {
+      "name": "version",
+      "params": []
+    }
+  ]
+}
