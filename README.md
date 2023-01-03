@@ -12,9 +12,18 @@ Looking for tutorials to get started? Look at [examples](https://polkadot.js.org
 
 This fork includes a modified *typegen* utility that can generate an *OpenRPC* document.
 
+### Setup
+
+Create a folder for the output file(s):
+
+```mkdir output_directory```
+
+Install the project:
+```yarn install```
+
 ### Usage
 
-```yarn polkadot-types-from-chain --openrpc --endpoint ws://127.0.0.1:9944 --output FOLDER_MUST_ALREADY_EXIST```
+```yarn polkadot-types-from-chain --openrpc --endpoint ws://127.0.0.1:9944 --output FOLDER_THAT_MUST_ALREADY_EXIST```
 
 ### Note
 
