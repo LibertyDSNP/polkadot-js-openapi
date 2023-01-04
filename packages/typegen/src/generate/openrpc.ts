@@ -25,6 +25,21 @@ interface ModuleDef {
   name: string;
 }
 
+const typeToOpenRPCType = new Map<string, object>([
+  ['bool', { type: 'boolean' }],
+  ['string', { type: 'string' }],
+  ['u8', { type: 'integer' }],
+  ['u16', { type: 'integer' }],
+  ['u32', { type: 'integer' }],
+  ['u64', { type: 'integer' }],
+  ['u128', { type: 'integer' }],
+  ['i8', { type: 'integer' }],
+  ['i16', { type: 'integer' }],
+  ['i32', { type: 'integer' }],
+  ['i64', { type: 'integer' }],
+  ['i128', { type: 'integer' }]
+]);
+
 const StorageKeyType = 'StorageKey | string | Uint8Array | any';
 
 const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
@@ -116,9 +131,15 @@ export function generateRpcTypes (registry: TypeRegistry, importDefinitions: Rec
           };
           param.name = defp.name;
           param.required = defp.isOptional ?? true;
-          param.schema = JSON.stringify({
-            "$ref": "#/components/schema/" + defp.type
-          },null,1);
+          let schema = new Map();
+          let stype = typeToOpenRPCType.get(defp.type);
+          if (stype) {
+            schema.set("type", stype);
+          }
+          else {
+            schema.set("$ref", "#/components/schema/" + defp.type);
+          }
+          param.schema = JSON.stringify(schema, null, 1);
           params.push(param);
         }
 
