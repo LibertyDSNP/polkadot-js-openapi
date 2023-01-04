@@ -22,6 +22,8 @@ Install the project:
 
 ```yarn install```
 
+Start up a node (if it isn't already running) and use it's IP address below:
+
 ### Usage
 
 ```yarn polkadot-types-from-chain --openrpc --endpoint ws://127.0.0.1:9944 --output FOLDER_THAT_MUST_ALREADY_EXIST```
