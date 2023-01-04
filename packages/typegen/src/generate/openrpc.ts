@@ -4,6 +4,8 @@
 import type { TypeRegistry } from '@polkadot/types/create';
 import type { Definitions } from '@polkadot/types/types';
 import type { ExtraTypes } from './types';
+import frequencyJson from '../data/frequencyRpc.json';
+import frequencyDataTypesJson from '../data/frequencyDataTypes.json'
 
 import Handlebars from 'handlebars';
 
@@ -180,11 +182,14 @@ export function generateRpcTypes (registry: TypeRegistry, importDefinitions: Rec
         }
       ]
     });
-    console.log(json);
+    // console.log(json);
     const parsed = JSON.parse(json);
 
-    // console.dir(parsed);
-    json = JSON.stringify(parsed, null, 2);
+    parsed["components"] = frequencyDataTypesJson;
+    // console.dir({...parsed, ...frequencyJson});
+
+    // How should this data be structured? Need to experiment.
+    json = JSON.stringify({...parsed, ...frequencyJson}, null, 2);
     return json;
   });
 }

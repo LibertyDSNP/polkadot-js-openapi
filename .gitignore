@@ -26,12 +26,4 @@ package-lock.json
 tsconfig*buildinfo
 yarn-debug.log*
 yarn-error.log*
-stuff/augment-api-consts.ts
-stuff/augment-api-errors.ts
-stuff/augment-api-tx.ts
-stuff/augment-api-rpc.ts
-stuff/augment-api-runtime.ts
-stuff/augment-api.ts
-stuff/augment-api-events.ts
-stuff/augment-api-query.ts
-stuff/openrpc.json
+stuff/*
