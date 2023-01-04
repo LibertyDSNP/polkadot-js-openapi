@@ -25,19 +25,19 @@ interface ModuleDef {
   name: string;
 }
 
-const typeToOpenRPCType = new Map<string, object>([
-  ['bool', { type: 'boolean' }],
-  ['string', { type: 'string' }],
-  ['u8', { type: 'integer' }],
-  ['u16', { type: 'integer' }],
-  ['u32', { type: 'integer' }],
-  ['u64', { type: 'integer' }],
-  ['u128', { type: 'integer' }],
-  ['i8', { type: 'integer' }],
-  ['i16', { type: 'integer' }],
-  ['i32', { type: 'integer' }],
-  ['i64', { type: 'integer' }],
-  ['i128', { type: 'integer' }]
+const typeToOpenRPCType = new Map<string, string>([
+  ['bool','boolean'],
+  ['string', 'string'],
+  ['u8', 'integer'],
+  ['u16', 'integer'],
+  ['u32', 'integer' ],
+  ['u64', 'integer' ],
+  ['u128', 'integer' ],
+  ['i8','integer' ],
+  ['i16', 'integer' ],
+  ['i32','integer' ],
+  ['i64', 'integer' ],
+  ['i128', 'integer' ]
 ]);
 
 const StorageKeyType = 'StorageKey | string | Uint8Array | any';
@@ -121,27 +121,45 @@ export function generateRpcTypes (registry: TypeRegistry, importDefinitions: Rec
         }
 
         let params = [];
+
+        interface ParamSchema {
+          type?: string;
+          $ref?: string;
+        };
+        interface Param {
+          name: string;
+          description: string;
+          required: boolean;
+          schema?: ParamSchema;
+        }
+
         for (const defp of def.params) {
-          let param = {
-            "name": "",
-            "description": "",
-            "required": false,
-            "schema": {
-            }
+          let param: Param = {
+            name: defp.name,
+            description: "",
+            required: defp.isOptional ?? true,
+            schema: {
+            } as ParamSchema
           };
-          param.name = defp.name;
-          param.required = defp.isOptional ?? true;
-          let schema = new Map();
+
           let stype = typeToOpenRPCType.get(defp.type);
-          if (stype) {
-            schema.set("type", stype);
+          console.log(defp.type +" -> " + stype + " TYPE=" + typeof stype);
+
+          let schema: ParamSchema;
+          if (!!stype) {
+            schema = {
+              type: stype
+            }
           }
           else {
-            schema.set("$ref", "#/components/schema/" + defp.type);
+            schema = {
+              $ref: "#/components/schema/" + defp.type
+            }
           }
-          param.schema = JSON.stringify(schema, null, 1);
+          param.schema = schema;
           params.push(param);
         }
+        console.dir(params);
 
         const item = {
           pallet: section,
@@ -201,12 +219,23 @@ export function generateRpcTypes (registry: TypeRegistry, importDefinitions: Rec
         }
       ]
     });
-    console.log(json);
-    const parsed = JSON.parse(json);
-
+    // console.log("=========START=======");
+    // let str = JSON.stringify(json);
+    // console.log(str);
+    // console.log("=========END=======");
+    let parsed;
+    let stringified;
+    try {
+      parsed = JSON.parse(json);
+      // stringified = JSON.stringify(json, ["methods", "components", "name", "description", "schema", "type", "params", "$ref"], 2);
+      stringified = JSON.stringify(parsed, null, 2);
+    }
+    catch (e) {
+      console.error(e);
+      throw e;
+    }
     // console.dir(parsed);
-    json = JSON.stringify(parsed, null, 2);
-    return json;
+    return stringified;
   });
 }
 
