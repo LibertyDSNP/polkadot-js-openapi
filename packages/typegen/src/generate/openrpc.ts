@@ -148,8 +148,8 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
       // },
       const sectionName = sectionFullName.split('/').pop();
 
-      Object.keys(rpc).sort().map((methodName) => {
-        return mapMethod(methodName, sectionName, rpc[methodName].params, methods)
+      Object.keys(rpc).sort().forEach((methodName) => {
+        mapMethod(methodName, sectionName, rpc[methodName].params, methods)
       });
     })
 
