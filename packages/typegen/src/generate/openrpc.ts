@@ -28,18 +28,6 @@ interface ORMethod {
   params: [];
   result?: string;
 }
-interface ItemDef {
-  args: string;
-  docs: string[];
-  generic: string | undefined;
-  name: string;
-  type: string | undefined;
-}
-
-interface ModuleDef {
-  items: ItemDef[];
-  name: string;
-}
 
 const typeToOpenRPCType = new Map<string, string>([
   ['bool', 'boolean'],
@@ -56,8 +44,6 @@ const typeToOpenRPCType = new Map<string, string>([
   ['i128', 'integer']
 ]);
 
-const StorageKeyType = 'StorageKey | string | Uint8Array | any';
-
 const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
 
 /** @internal */
@@ -66,9 +52,6 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
     const allTypes: ExtraTypes = { '@polkadot/types/interfaces': importDefinitions, ...extraTypes };
     const imports = createImports(allTypes);
     const definitions = imports.definitions as Record<string, Definitions>;
-    // const allDefs = Object.entries(allTypes).reduce((defs, [path, obj]) => {
-    //   return Object.entries(obj).reduce((defs, [key, value]) => ({ ...defs, [`${path}/${key}`]: value }), defs);
-    // }, {});
 
     Handlebars.registerHelper('json', function (context) {
       return JSON.stringify(context);
@@ -81,7 +64,6 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
 
     const allRPCMethods: object[] = [];
 
-    //const additional: Record<string, ModuleDef> = {};
     const modules = rpcKeys.map((sectionFullName) => {
       const rpc = definitions[sectionFullName].rpc || {};
       const section = sectionFullName.split('/').pop();
@@ -89,56 +71,7 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
       const allMethods = Object.keys(rpc).sort().map((methodName) => {
         const def = rpc[methodName];
 
-        let args;
         let type;
-        let generic;
-
-        // // These are too hard to type with generics, do manual overrides
-        // if (section === 'state') {
-        //   setImports(allDefs, imports, ['Codec', 'Hash', 'StorageKey', 'Vec']);
-
-        //   if (methodName === 'getStorage') {
-        //     generic = 'T = Codec';
-        //     args = [`key: ${StorageKeyType}, block?: Hash | Uint8Array | string`];
-        //     type = 'T';
-        //   } else if (methodName === 'queryStorage') {
-        //     generic = 'T = Codec[]';
-        //     args = [`keys: Vec<StorageKey> | (${StorageKeyType})[], fromBlock?: Hash | Uint8Array | string, toBlock?: Hash | Uint8Array | string`];
-        //     type = '[Hash, T][]';
-        //   } else if (methodName === 'queryStorageAt') {
-        //     generic = 'T = Codec[]';
-        //     args = [`keys: Vec<StorageKey> | (${StorageKeyType})[], at?: Hash | Uint8Array | string`];
-        //     type = 'T';
-        //   } else if (methodName === 'subscribeStorage') {
-        //     generic = 'T = Codec[]';
-        //     args = [`keys?: Vec<StorageKey> | (${StorageKeyType})[]`];
-        //     type = 'T';
-        //   }
-
-        //   // TEST
-        //   args = [];
-        // }
-
-        // if (args === undefined) {
-        //   setImports(allDefs, imports, [def.type]);
-
-        //   // args = def.params.map((param) => {
-        //   //   const similarTypes = getSimilarTypes(registry, definitions, param.type, imports);
-
-        //   //   setImports(allDefs, imports, [param.type, ...similarTypes]);
-
-        //   //   return `${param.name}${param.isOptional ? '?' : ''}: ${similarTypes.join(' | ')}`;
-        //   // });
-
-        //   type = formatType(registry, allDefs, def.type, imports);
-        //   generic = '';
-
-        //   // TEST
-        //   console.log(section + " / " + methodName);
-        //   //console.dir(def.params);
-        //   args = def.params;
-        // }
-
         let params: ORParam[] = [];
 
         for (const defp of def.params) {
@@ -186,8 +119,6 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
         name: section || 'unknown'
       };
     }).sort((a, b) => a.name.localeCompare(b.name));
-
-    // imports.typesTypes.Observable = true;
 
     let json = generateRpcTypesTemplate({
       allRPCMethods
