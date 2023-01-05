@@ -36,6 +36,7 @@ interface ORParamSchema {
 interface ORParam {
   name: string;
   description: string;
+  type: string;
   required: boolean;
   schema?: ORParamSchema;
 }
@@ -63,9 +64,57 @@ const typeToOpenRPCType = new Map<string, string>([
 
 const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
 
-
+// Why is this a separate function?
 function lookupComponent(type: string) {
   console.log("lookup of " + type);
+}
+
+function mapParams(inputParams): ORParam[] {
+  const params = [];
+  for (const defp of inputParams) {
+    let param: ORParam = {
+      name: defp.name,
+      description: "",
+      type: defp.type,
+      required: defp.isOptional ?? true,
+      schema: {} as ORParamSchema
+    };
+
+    let stype = typeToOpenRPCType.get(defp.type);
+    console.log(defp.type + " -> " + stype + " TYPE=" + typeof stype);
+
+    let schema: ORParamSchema;
+    if (stype !== undefined) {
+      schema = {
+        type: stype
+      }
+    }
+    else {
+      schema = {
+        $ref: "#/components/schema/" + defp.type
+      }
+    }
+    param.schema = schema;
+    params.push(param);
+  }
+  return params;
+}
+
+
+function mapMethod(methodName: string, sectionName: string, methodParams: any, methods: any[]): ORMethod {
+  let type;
+  let params: ORParam[] = mapParams(methodParams);
+
+  let method: ORMethod = {
+    pallet: sectionName,
+    name: methodName,
+    params: params,
+    result: type
+  } as ORMethod;
+
+  methods.push(method);
+
+  return method;
 }
 
 /** @internal */
@@ -74,109 +123,39 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
     const allTypes: ExtraTypes = { '@polkadot/types/interfaces': importDefinitions, ...extraTypes };
     const imports = createImports(allTypes);
     const definitions = imports.definitions as Record<string, Definitions>;
-
     const allInterfaces = allTypes["@polkadot/types/interfaces"];
-
-    // console.log(allInterfaces);
-    // //const pallets = Object.keys(allInterfaces);
-    // //console.log(pallets);
-    // const balances_pallet = allInterfaces["balances"]["types"];
-    // console.log(balances_pallet);
-
-    // const acctData = registry.getDefinition("AccountData");
-    // console.log(acctData);
-
-
-
-    // //const tdef = "[u8; 8]";
-    // const tdef = "Vec<Balance>";
-    // const val = registry.getDefinition(tdef);
-    // console.log(tdef + "=" + val);
-    // //console.log(allInterfaces["runtime"]["types"]);
-
-
-    // const lval = registry.lookup.getSiType("u32");
-    // console.log("lval=" + lval);
-    // console.log("END");
-    // exit(0);
 
     Handlebars.registerHelper('json', function (context) {
       return JSON.stringify(context);
     });
 
+    // get all rpc definitions
     const rpcKeys = Object
       .keys(definitions)
       .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
       .sort();
 
-    const schemas: object[] = [];
     const methods: object[] = [];
 
-    const modules = rpcKeys.map((sectionFullName) => {
+    rpcKeys.forEach((sectionFullName) => {
       const rpc = definitions[sectionFullName].rpc || {};
-      const section = sectionFullName.split('/').pop();
+      // Example:
+      // getKeysPaged: {
+      //   alias: [ 'childstate_getKeysPagedAt' ],
+      //   description: 'Returns the keys with prefix from a child storage with pagination support',
+      //   params: [ [Object], [Object], [Object], [Object], [Object] ],
+      //   type: 'Vec<StorageKey>'
+      // },
+      const sectionName = sectionFullName.split('/').pop();
 
-      const allMethods = Object.keys(rpc).sort().map((methodName) => {
-        const def = rpc[methodName];
+      Object.keys(rpc).sort().map((methodName) => {
+        return mapMethod(methodName, sectionName, rpc[methodName].params, methods)
+      });
+    })
 
-        let type;
-        let params: ORParam[] = [];
-
-        for (const defp of def.params) {
-          let param: ORParam = {
-            name: defp.name,
-            description: "",
-            required: defp.isOptional ?? true,
-            schema: {
-            } as ORParamSchema
-          };
-
-          let stype = typeToOpenRPCType.get(defp.type);
-          console.log(defp.type + " -> " + stype + " TYPE=" + typeof stype);
-          lookupComponent(defp.type);
-
-          let schema: ORParamSchema;
-          if (!!stype) {
-            schema = {
-              type: stype
-            }
-          }
-          else {
-            schema = {
-              $ref: "#/components/schema/" + defp.type
-            }
-          }
-          param.schema = schema;
-          params.push(param);
-        }
-        //console.dir(params);
-
-        let method: ORMethod = {
-          pallet: section,
-          name: methodName,
-          params: params,
-          result: type
-        } as ORMethod;
-
-        methods.push(method);
-
-        //console.dir(method);
-
-        return method;
-      }).filter((method): method is ORMethod => !!method);
-
-      return {
-        items: allMethods,
-        name: section || 'unknown'
-      };
-    }).sort((a, b) => a.name.localeCompare(b.name));
-
-    // console.dir(methods);
     let json = generateRpcTypesTemplate({
       methods
     });
-
-    // console.log(json);
 
     let parsed;
     let stringified;
@@ -188,7 +167,7 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
       console.error(e);
       throw e;
     }
-    // console.dir(parsed);
+
     return stringified;
   });
 }
