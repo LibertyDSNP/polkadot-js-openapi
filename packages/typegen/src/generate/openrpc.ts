@@ -63,6 +63,21 @@ const typeToOpenRPCType = new Map<string, string>([
 
 const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
 
+// Unwrap a type if it is wrapper.  e.g.  Option<u32> is u32, Vec<u8> is u8, etc...
+function unwrapType(wrapper: string, aType: string): RegExpMatchArray | null {
+  let pattern = `${wrapper}<(.*?)>`;
+  let regex = new RegExp(pattern);
+  const match = aType.match(regex);
+  return match;
+}
+
+// Unwrap a tuple.  e.g. (u32,u32), etc...
+function unwrapTuple(aType: string): RegExpMatchArray | null {
+  const regex =  /\(([^)]+)\)/;
+
+  const match = aType.match(regex);
+  return match;
+}
 
 function lookupComponent(type: string) {
   console.log("lookup of " + type);
