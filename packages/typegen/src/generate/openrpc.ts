@@ -12,6 +12,23 @@ import staticSubstrate from '@polkadot/types-support/metadata/static-substrate';
 
 import { createImports, initMeta, readTemplate, writeFile } from '../util';
 
+interface ORObject {
+  type: "object";
+  properties: {};
+  required: string[];
+}
+
+interface ORArray {
+  type: "array";
+  items: {};
+}
+
+interface ORType {
+  type: string;
+}
+interface ORSchema {
+  type?: string;
+}
 interface ORParamSchema {
   type?: string;
   $ref?: string;
@@ -46,12 +63,42 @@ const typeToOpenRPCType = new Map<string, string>([
 
 const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
 
+
+function lookupComponent(type: string) {
+  console.log("lookup of " + type);
+}
+
 /** @internal */
 export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Record<string, Definitions>, dest: string, extraTypes: ExtraTypes): void {
   writeFile(dest, (): string => {
     const allTypes: ExtraTypes = { '@polkadot/types/interfaces': importDefinitions, ...extraTypes };
     const imports = createImports(allTypes);
     const definitions = imports.definitions as Record<string, Definitions>;
+
+    const allInterfaces = allTypes["@polkadot/types/interfaces"];
+
+    // console.log(allInterfaces);
+    // //const pallets = Object.keys(allInterfaces);
+    // //console.log(pallets);
+    // const balances_pallet = allInterfaces["balances"]["types"];
+    // console.log(balances_pallet);
+
+    // const acctData = registry.getDefinition("AccountData");
+    // console.log(acctData);
+
+
+
+    // //const tdef = "[u8; 8]";
+    // const tdef = "Vec<Balance>";
+    // const val = registry.getDefinition(tdef);
+    // console.log(tdef + "=" + val);
+    // //console.log(allInterfaces["runtime"]["types"]);
+
+
+    // const lval = registry.lookup.getSiType("u32");
+    // console.log("lval=" + lval);
+    // console.log("END");
+    // exit(0);
 
     Handlebars.registerHelper('json', function (context) {
       return JSON.stringify(context);
@@ -62,7 +109,8 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
       .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
       .sort();
 
-    const allRPCMethods: object[] = [];
+    const schemas: object[] = [];
+    const methods: object[] = [];
 
     const modules = rpcKeys.map((sectionFullName) => {
       const rpc = definitions[sectionFullName].rpc || {};
@@ -85,6 +133,7 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
 
           let stype = typeToOpenRPCType.get(defp.type);
           console.log(defp.type + " -> " + stype + " TYPE=" + typeof stype);
+          lookupComponent(defp.type);
 
           let schema: ORParamSchema;
           if (!!stype) {
@@ -100,7 +149,7 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
           param.schema = schema;
           params.push(param);
         }
-        console.dir(params);
+        //console.dir(params);
 
         let method: ORMethod = {
           pallet: section,
@@ -109,7 +158,9 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
           result: type
         } as ORMethod;
 
-        allRPCMethods.push(method);
+        methods.push(method);
+
+        //console.dir(method);
 
         return method;
       }).filter((method): method is ORMethod => !!method);
@@ -120,9 +171,12 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
       };
     }).sort((a, b) => a.name.localeCompare(b.name));
 
+    // console.dir(methods);
     let json = generateRpcTypesTemplate({
-      allRPCMethods
+      methods
     });
+
+    // console.log(json);
 
     let parsed;
     let stringified;
