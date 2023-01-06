@@ -1,20 +1,3 @@
-export interface ORObject {
-type: "object";
-properties: {};
-required: string[];
-}
-
-export interface ORArray {
-type: "array";
-items: {};
-}
-
-export interface ORType {
-type: string;
-}
-export interface ORSchema {
-type?: string;
-}
 export interface ORParamSchema {
 type?: string;
 $ref?: string;

@@ -28,12 +28,12 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
     });
 
     // get all rpc definitions
-    const methods: ORMethod[] = [];
-    Object
+    const methods: ORMethod[] = Object
       .keys(definitions)
       .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
       .sort()
-      .forEach((sectionFullName) => { rpcKeyToRpcMethods(sectionFullName, definitions, methods) })
+      .map((sectionFullName) => rpcKeyToRpcMethods(sectionFullName, definitions))
+      .reduce((acc, el) => acc.concat(el));
 
     return transformMethodsToJson(methods, generateRpcTypesTemplate);
   });

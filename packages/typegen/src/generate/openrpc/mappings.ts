@@ -1,22 +1,19 @@
 import { ORMethod, ORParam, ORParamSchema, typeToOpenRPCType } from "./types";
 
-export function rpcKeyToRpcMethods(rpcKey: string, definitions: any, methods: any[]) {
+export function rpcKeyToRpcMethods(rpcKey: string, definitions: any): ORMethod[] {
   const rpc = definitions[rpcKey].rpc || {};
   const sectionName = rpcKey.split('/').pop() || "";
 
-  Object.keys(rpc).sort().forEach((methodName) => {
-    // mapMethod(methodName, sectionName, rpc[methodName].params, methods)
+  return Object.keys(rpc).sort().map((methodName) => {
     let type;
     let params: ORParam[] = rpc[methodName].params.map((methodParam: any) => mapParam(methodParam));
 
-    let method: ORMethod = {
+    return {
       pallet: sectionName,
       name: methodName,
       params: params,
       result: type
     } as ORMethod;
-
-    methods.push(method);
   });
 }
 
