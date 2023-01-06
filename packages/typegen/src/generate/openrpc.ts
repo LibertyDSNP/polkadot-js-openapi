@@ -11,13 +11,14 @@ import * as defaultDefinitions from '@polkadot/types/interfaces/definitions';
 import staticSubstrate from '@polkadot/types-support/metadata/static-substrate';
 
 import { createImports, initMeta, readTemplate, writeFile } from '../util';
-import { rpcKeyToRpcMethods, rpcMethodsToJson } from './openrpc/mappings';
-import { ORMethod } from './openrpc/types';
+import { rpcKeyToOpenRpcSchemas, rpcKeyToOpenRpcMethods, rpcMetadataToJson } from './openrpc/mappings';
+import { ORMethod, ORSchema } from './openrpc/types';
 
-const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
+const generateOpenRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
 
 /** @internal */
-export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Record<string, Definitions>, dest: string, extraTypes: ExtraTypes): void {
+export function generateOpenRpcTypes(registry: TypeRegistry, importDefinitions: Record<string, Definitions>, dest: string, extraTypes: ExtraTypes): void {
+
   writeFile(dest, (): string => {
     const allTypes: ExtraTypes = { '@polkadot/types/interfaces': importDefinitions, ...extraTypes };
     const imports = createImports(allTypes);
@@ -31,17 +32,23 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
     const methods: ORMethod[] = Object
       .keys(definitions)
       .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
-      .map((sectionFullName) => rpcKeyToRpcMethods(sectionFullName, definitions))
+      .map((sectionFullName) => rpcKeyToOpenRpcMethods(sectionFullName, definitions))
       .reduce((acc, el) => acc.concat(el));
 
-    return rpcMethodsToJson(methods, generateRpcTypesTemplate);
+      const schemas: ORSchema[] = Object
+      .keys(definitions)
+      .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
+      .map((sectionFullName) => rpcKeyToOpenRpcSchemas(sectionFullName, definitions))
+      .reduce((acc, el) => acc.concat(el));
+
+    return rpcMetadataToJson(methods, schemas, generateOpenRpcTypesTemplate);
   });
 }
 
 export function generateDefaultOpenRPC(dest: string, extraTypes: ExtraTypes = {}): void {
   const { registry } = initMeta(staticSubstrate, extraTypes);
 
-  generateRpcTypes(
+  generateOpenRpcTypes(
     registry,
     defaultDefinitions,
     dest,

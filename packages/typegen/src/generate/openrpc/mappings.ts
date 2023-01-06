@@ -1,6 +1,6 @@
-import { ORMethod, ORParam, ORParamSchema, typeToOpenRPCType } from "./types";
+import { ORSchema, ORMethod, ORParam, ORParamSchema, typeToOpenRPCType } from "./types";
 
-export function rpcKeyToRpcMethods(rpcKey: string, definitions: any): ORMethod[] {
+export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMethod[] {
   const rpc = definitions[rpcKey].rpc || {};
   const sectionName = rpcKey.split('/').pop() || "";
 
@@ -17,13 +17,12 @@ export function rpcKeyToRpcMethods(rpcKey: string, definitions: any): ORMethod[]
   });
 }
 
-export function rpcMethodsToJson(methods: ORMethod[], template: (options: {methods: ORMethod[]}) => string): string {
-  let json = template({ methods });
+export function rpcMetadataToJson(methods: ORMethod[], schemas: ORSchema[], template: (options: {methods: ORMethod[], schemas: ORSchema[]}) => string): string {
+  const json = template({ methods, schemas });
 
-  let parsed;
   let stringified;
   try {
-    parsed = JSON.parse(json);
+    const parsed = JSON.parse(json);
     stringified = JSON.stringify(parsed, null, 2);
   }
   catch (e) {
@@ -32,6 +31,11 @@ export function rpcMethodsToJson(methods: ORMethod[], template: (options: {metho
   }
 
   return stringified;
+}
+
+export function rpcKeyToOpenRpcSchemas(rpcKey: string, definitions: any): ORSchema[] {
+  // placeholder
+  return [];
 }
 
 /** @internal */
