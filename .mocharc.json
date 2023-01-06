@@ -1,0 +1,9 @@
+{
+    "extensions": ["ts"],
+    "spec": ["./packages/typegen/{,!(node_modules)/**}/*.test.ts"],
+    "node-option": [
+      "experimental-specifier-resolution=node",
+      "loader=ts-node/esm"
+    ]
+  }
+  

@@ -5,16 +5,10 @@ import type { TypeRegistry } from '@polkadot/types/create';
 import type { Definitions } from '@polkadot/types/types';
 import type { ExtraTypes } from './types';
 
-import Handlebars from 'handlebars';
-
 import * as defaultDefinitions from '@polkadot/types/interfaces/definitions';
 import staticSubstrate from '@polkadot/types-support/metadata/static-substrate';
 
-import { createImports, initMeta, readTemplate, writeFile } from '../util';
-import { rpcKeyToRpcMethods, transformMethodsToJson } from './openrpc/mappings';
-import { ORMethod } from './openrpc/types';
-
-const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
+import { createImports, initMeta, writeFile } from '../util';
 
 /** @internal */
 export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Record<string, Definitions>, dest: string, extraTypes: ExtraTypes): void {
@@ -23,23 +17,22 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
     const imports = createImports(allTypes);
     const definitions = imports.definitions as Record<string, Definitions>;
 
-    Handlebars.registerHelper('json', function (context) {
-      return JSON.stringify(context);
-    });
-
     // get all rpc definitions
-    const methods: ORMethod[] = [];
-    Object
+    const rpcKeys = Object
       .keys(definitions)
       .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
-      .sort()
-      .forEach((sectionFullName) => { rpcKeyToRpcMethods(sectionFullName, definitions, methods) })
+      .map((key) => Object.keys(definitions[key].rpc || {}))
+      .reduce((acc, el) => acc.concat(el))
+      .sort();
 
-    return transformMethodsToJson(methods, generateRpcTypesTemplate);
+    let json = {
+        rpcNames: rpcKeys
+    };
+    return JSON.stringify(json, null, 2);
   });
 }
 
-export function generateDefaultOpenRPC(dest: string, extraTypes: ExtraTypes = {}): void {
+export function generateDefaultOpenRPCTestData(dest: string, extraTypes: ExtraTypes = {}): void {
   const { registry } = initMeta(staticSubstrate, extraTypes);
 
   generateRpcTypes(

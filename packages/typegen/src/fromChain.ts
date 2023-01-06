@@ -9,10 +9,10 @@ import yargs from 'yargs';
 import { Definitions } from '@polkadot/types/types';
 import { formatNumber } from '@polkadot/util';
 
-import { generateDefaultCalls, generateDefaultConsts, generateDefaultErrors, generateDefaultEvents, generateDefaultOpenRPC, generateDefaultQuery, generateDefaultRpc, generateDefaultTx } from './generate';
+import { generateDefaultCalls, generateDefaultConsts, generateDefaultErrors, generateDefaultEvents, generateDefaultOpenRPC, generateDefaultOpenRPCTestData, generateDefaultQuery, generateDefaultRpc, generateDefaultTx } from './generate';
 import { assertDir, assertFile, getMetadataViaWs, HEADER, writeFile } from './util';
 
-function generate (metaHex: HexString, pkg: string | undefined, output: string, isStrict?: boolean, isOpenRPC?: boolean): void {
+function generate (metaHex: HexString, pkg: string | undefined, output: string, isStrict?: boolean, isOpenRPC?: boolean, isOpenRPCTests?: boolean): void {
   console.log(`Generating from metadata, ${formatNumber((metaHex.length - 2) / 2)} bytes`);
   console.log(`generate(pkg: ${pkg || 'undefined'} output: ${output})`);
 
@@ -45,8 +45,11 @@ function generate (metaHex: HexString, pkg: string | undefined, output: string, 
     console.error('ERROR: No lookup definitions found:', (error as Error).message);
   }
 
-  if (isOpenRPC === true) {
+  if (isOpenRPC) {
     generateDefaultOpenRPC(path.join(outputPath, 'openrpc.json'), extraTypes);
+  }
+  if (isOpenRPCTests) {
+    generateDefaultOpenRPCTestData(path.join(outputPath, 'openrpcMethods.json'), extraTypes);
   }
 
   generateDefaultConsts(path.join(outputPath, 'augment-api-consts.ts'), metaHex, extraTypes, isStrict, customLookupDefinitions);
@@ -70,10 +73,10 @@ function generate (metaHex: HexString, pkg: string | undefined, output: string, 
   process.exit(0);
 }
 
-type ArgV = { endpoint: string; openrpc?: boolean, output: string; package?: string; strict?: boolean };
+type ArgV = { endpoint: string; openrpc?: boolean, openrpcTests?: boolean, output: string; package?: string; strict?: boolean };
 
 export function main (): void {
-  const { endpoint, openrpc: isOpenRPC, output, package: pkg, strict: isStrict } = yargs.strict().options({
+  const { endpoint, openrpc: isOpenRPC, openrpcTests: isOpenRPCTests, output, package: pkg, strict: isStrict } = yargs.strict().options({
     endpoint: {
       description: 'The endpoint to connect to (e.g. wss://kusama-rpc.polkadot.io) or relative path to a file containing the JSON output of an RPC state_getMetadata call',
       required: true,
@@ -81,6 +84,10 @@ export function main (): void {
     },
     openrpc: {
       description: 'Generates an OpenRPC document',
+      type: 'boolean'
+    },
+    openrpcTests: {
+      description: 'Generates data used to test OpenRPC document generation',
       type: 'boolean'
     },
     output: {
@@ -100,7 +107,7 @@ export function main (): void {
 
   if (endpoint.startsWith('wss://') || endpoint.startsWith('ws://')) {
     getMetadataViaWs(endpoint)
-      .then((metadata) => generate(metadata, pkg, output, isStrict, isOpenRPC))
+      .then((metadata) => generate(metadata, pkg, output, isStrict, isOpenRPC, isOpenRPCTests))
       .catch(() => process.exit(1));
   } else {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
