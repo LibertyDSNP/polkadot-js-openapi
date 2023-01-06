@@ -1,3 +1,17 @@
+export interface ORSchema {
+}
+export interface ORSchemaObject extends ORSchema {
+  type: "object";
+  properties: {};
+  required: string[];
+}
+export interface ORSchemaArray extends ORSchema {
+  type: "array";
+  items: {};
+}
+export interface ORSchemaType extends ORSchema {
+  type: string;
+}
 export interface ORParamSchema {
 type?: string;
 $ref?: string;
