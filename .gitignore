@@ -35,4 +35,4 @@ stuff/augment-api.ts
 stuff/augment-api-events.ts
 stuff/augment-api-query.ts
 stuff/openrpc.json
-packages/typegen/test/data
+packages/typegen/test/data/**/*.ts

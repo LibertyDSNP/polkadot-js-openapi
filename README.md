@@ -26,6 +26,11 @@ Install the project:
 
 ```yarn polkadot-types-from-chain --openrpc --endpoint ws://127.0.0.1:9944 --output FOLDER_THAT_MUST_ALREADY_EXIST```
 
+### Tests
+Run tests with
+```
+make test-openrpc-typegen
+```
 ### Note
 
 To add support for additional complex types, you must:
