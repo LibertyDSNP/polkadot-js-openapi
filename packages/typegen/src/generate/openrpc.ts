@@ -11,7 +11,7 @@ import * as defaultDefinitions from '@polkadot/types/interfaces/definitions';
 import staticSubstrate from '@polkadot/types-support/metadata/static-substrate';
 
 import { createImports, initMeta, readTemplate, writeFile } from '../util';
-import { rpcKeyToRpcMethods, transformMethodsToJson } from './openrpc/mappings';
+import { rpcKeyToRpcMethods, rpcMethodsToJson } from './openrpc/mappings';
 import { ORMethod } from './openrpc/types';
 
 const generateRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
@@ -31,11 +31,10 @@ export function generateRpcTypes(registry: TypeRegistry, importDefinitions: Reco
     const methods: ORMethod[] = Object
       .keys(definitions)
       .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
-      .sort()
       .map((sectionFullName) => rpcKeyToRpcMethods(sectionFullName, definitions))
       .reduce((acc, el) => acc.concat(el));
 
-    return transformMethodsToJson(methods, generateRpcTypesTemplate);
+    return rpcMethodsToJson(methods, generateRpcTypesTemplate);
   });
 }
 

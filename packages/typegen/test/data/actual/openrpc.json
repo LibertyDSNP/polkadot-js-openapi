@@ -549,6 +549,35 @@
       ]
     },
     {
+      "name": "listening",
+      "params": []
+    },
+    {
+      "name": "peerCount",
+      "params": []
+    },
+    {
+      "name": "version",
+      "params": []
+    },
+    {
+      "name": "clientVersion",
+      "params": []
+    },
+    {
+      "name": "sha3",
+      "params": [
+        {
+          "name": "data",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schema/Bytes"
+          }
+        }
+      ]
+    },
+    {
       "name": "accounts",
       "params": []
     },
@@ -579,10 +608,6 @@
     },
     {
       "name": "chainId",
-      "params": []
-    },
-    {
-      "name": "clientVersion",
       "params": []
     },
     {
@@ -1016,10 +1041,6 @@
       "params": []
     },
     {
-      "name": "listening",
-      "params": []
-    },
-    {
       "name": "maxPriorityFeePerGas",
       "params": []
     },
@@ -1049,10 +1070,6 @@
       "params": []
     },
     {
-      "name": "peerCount",
-      "params": []
-    },
-    {
       "name": "protocolVersion",
       "params": []
     },
@@ -1078,19 +1095,6 @@
           "required": true,
           "schema": {
             "$ref": "#/components/schema/EthTransactionRequest"
-          }
-        }
-      ]
-    },
-    {
-      "name": "sha3",
-      "params": [
-        {
-          "name": "data",
-          "description": "",
-          "required": true,
-          "schema": {
-            "$ref": "#/components/schema/Bytes"
           }
         }
       ]
@@ -1182,10 +1186,6 @@
           }
         }
       ]
-    },
-    {
-      "name": "version",
-      "params": []
     },
     {
       "name": "proveFinality",
