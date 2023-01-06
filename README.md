@@ -31,6 +31,7 @@ Run tests with
 ```
 make test-openrpc-typegen
 ```
+Make sure you have a frequency node running locally (instant seal is ok).
 ### Note
 
 To add support for additional complex types, you must:
