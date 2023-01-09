@@ -21,7 +21,7 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
 
   return Object.keys(rpc).map((methodName) => {
     let type;
-    console.log(methodName);
+    console.log("\n" + methodName);
     let params: ORParam[] = rpc[methodName].params.map((methodParam: any) => mapParam(methodParam));
 
     return {
@@ -52,53 +52,94 @@ export function rpcMetadataToJson(methods: ORMethod[], schemas: ORSchemaComponen
 /** @internal */
 export function mapParam(inputParam: {name: string, type: string, isOptional?: boolean}): ORParam {
   console.dir(inputParam);
+
+  let [required, inputParamSchema] = metaTypeToSchema(inputParam.type);
   return {
     name: inputParam.name,
     description: "",
     type: inputParam.type,
-    required: inputParam.isOptional ? false : true,
-    schema: metaTypeToSchema(inputParam.type)
+    required: required,
+    schema: inputParamSchema
   };
 }
 
-function metaTypeToSchema(metaType: string): ORParamSchema {
+function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
   let schemaComponent:ORSchemaComponent = metaTypeToSchemaMap.get(metaType);
+  let required = true;
   if (schemaComponent === undefined) {
     console.log("Type " + metaType + " doesn't exist.  Try to define it.");
     let match;
-    let wrappedType = metaType;
+    let currentMetaType = metaType;
+    let wrappedType;
+
+    // Process Option<type>
+    match = unwrapType("Option", currentMetaType);
+    if (match) {
+      console.dir(match);
+      let wrappedType = match[1];
+      console.log("Unwrapped "+ currentMetaType + " to " + wrappedType);
+      required = false;
+      currentMetaType = wrappedType;
+    }
 
     // Process Vec<type>
-    match = unwrapType('Vec', metaType);
+    match = unwrapType("Vec", currentMetaType);
     if (match) {
       wrappedType = match[1];
-      console.log("Unwrapped "+ metaType + " to " + wrappedType);
+      console.log("Unwrapped "+ currentMetaType + " to " + wrappedType);
 
       let array = new ORSchemaArray();
-      array.items = {"$ref": "#/components/" + wrappedType};
+      array.items = {"$ref": "#/components/schemas/" + wrappedType};
       schemaComponent = array;
       metaTypeToSchemaMap.set(metaType, schemaComponent);
+      currentMetaType = wrappedType;
     }
     else {
       schemaComponent = new ORSchemaComponent();
-      schemaComponent.name = metaType;
+      schemaComponent.name = currentMetaType;
+    }
+
+    // Process Compact<type>
+    match = unwrapType("Compact", currentMetaType);
+    if (match) {
+      let wrappedType = match[1];
+      console.log("Unwrapped "+ currentMetaType + " to " + wrappedType);
+      required = false;
+      currentMetaType = wrappedType;
     }
   }
+
   if (schemaComponent instanceof ORSchemaType) {
-    return { type: schemaComponent.name }
+    return [required, { type: schemaComponent.name }];
   }
   else if (schemaComponent instanceof ORSchemaArray) {
-    return { type: schemaComponent.type, items: schemaComponent.items }
+    return [required, {  type: schemaComponent.type, items: schemaComponent.items }];
   }
   else {
-    return { $ref: `#/components/schemas/${schemaComponent.name}` }
+    return [required, { $ref: `#/components/schemas/${schemaComponent.name}` }];
   }
 }
 
 // Unwrap a type if it is wrapper.  e.g.  Option<u32> is u32, Vec<u8> is u8, etc...
 function unwrapType(wrapper: string, aType: string): RegExpMatchArray | null {
-  let pattern = `${wrapper}<(.*?)>`;
-  let regex = new RegExp(pattern);
+  let pattern = `${wrapper}<(.*?)>$`;
+  const regex = new RegExp(pattern);
+  const match = aType.match(regex);
+  return match;
+}
+
+// Unwrap a tuple.  e.g. (u32,u32), etc...
+function unwrapTuple(aType: string): RegExpMatchArray | null {
+  const regex =  /\(([^)]+)\)/;
+
+  const match = aType.match(regex);
+  return match;
+}
+
+// Unwrap an array.  e.g. [u8; 8], etc...
+function unwrapArray(aType: string): RegExpMatchArray | null {
+  const regex = /\[([^\]]+)\]/;
+
   const match = aType.match(regex);
   return match;
 }
