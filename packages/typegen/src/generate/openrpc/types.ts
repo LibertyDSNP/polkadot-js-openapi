@@ -1,46 +1,43 @@
-export interface ORSchema {
+export class ORSchemaComponent {
+    name: string;
 }
-export interface ORSchemaObject extends ORSchema {
-  type: "object";
-  properties: {};
-  required: string[];
+export class ORSchemaObject extends ORSchemaComponent {
+    type: string;
+    properties: {};
+    required: string[];
+
+    constructor() {
+        super();
+        this.type = "object";
+    };
 }
-export interface ORSchemaArray extends ORSchema {
-  type: "array";
-  items: {};
+export class ORSchemaArray extends ORSchemaComponent {
+    type: string;
+    items: {};
+
+    constructor() {
+        super();
+        this.type = "array";
+    };
 }
-export interface ORSchemaType extends ORSchema {
-  type: string;
+export class ORSchemaType extends ORSchemaComponent {
+    type: string;
 }
 export interface ORParamSchema {
-type?: string;
-$ref?: string;
+    type?: string;
+    $ref?: string;
+    items?: {};
 };
 export interface ORParam {
-name: string;
-description: string;
-type: string;
-required: boolean;
-schema?: ORParamSchema;
+    name: string;
+    description: string;
+    type: string;
+    required: boolean;
+    schema?: ORParamSchema;
 }
 export interface ORMethod {
-pallet?: string;
-name: string;
-params: [];
-result?: string;
+    pallet?: string;
+    name: string;
+    params: [];
+    result?: string;
 }
-
-export const typeToOpenRPCType = new Map<string, string>([
-['bool', 'boolean'],
-['string', 'string'],
-['u8', 'integer'],
-['u16', 'integer'],
-['u32', 'integer'],
-['u64', 'integer'],
-['u128', 'integer'],
-['i8', 'integer'],
-['i16', 'integer'],
-['i32', 'integer'],
-['i64', 'integer'],
-['i128', 'integer']
-]);
