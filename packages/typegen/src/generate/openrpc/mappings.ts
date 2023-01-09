@@ -54,6 +54,10 @@ export function mapParam(inputParam: {name: string, type: string, isOptional?: b
   console.dir(inputParam);
 
   let [required, inputParamSchema] = metaTypeToSchema(inputParam.type);
+  // Required can be from the Option<type> or from isOptional.
+  if (inputParam.isOptional) {
+    required = false;
+  }
   return {
     name: inputParam.name,
     description: "",
