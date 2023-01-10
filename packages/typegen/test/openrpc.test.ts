@@ -39,7 +39,7 @@ describe('JSON Shape Tests', function () {
       assert.strictEqual(param.name, "foo");
       assert.strictEqual(param.type, "FooType");
       assert.notStrictEqual(param.schema, undefined);
-      assert.strictEqual(param.schema?.$ref, "#/components/schema/FooType");
+      assert.strictEqual(param.schema?.$ref, "#/components/schemas/FooType");
     });
 
     it("should map a param with a primitive type", function() {
