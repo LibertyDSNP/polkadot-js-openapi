@@ -141,18 +141,18 @@ function unwrapType(wrapper: string, aType: string): RegExpMatchArray | null {
   return match;
 }
 
-// Unwrap a tuple.  e.g. (u32,u32), etc...
-function unwrapTuple(aType: string): RegExpMatchArray | null {
-  const regex = /\(([^)]+)\)/;
+// // Unwrap a tuple.  e.g. (u32,u32), etc...
+// function unwrapTuple(aType: string): RegExpMatchArray | null {
+//   const regex = /\(([^)]+)\)/;
 
-  const match = aType.match(regex);
-  return match;
-}
+//   const match = aType.match(regex);
+//   return match;
+// }
 
-// Unwrap an array.  e.g. [u8; 8], etc...
-function unwrapArray(aType: string): RegExpMatchArray | null {
-  const regex = /\[([^\]]+)\]/;
+// // Unwrap an array.  e.g. [u8; 8], etc...
+// function unwrapArray(aType: string): RegExpMatchArray | null {
+//   const regex = /\[([^\]]+)\]/;
 
-  const match = aType.match(regex);
-  return match;
-}
+//   const match = aType.match(regex);
+//   return match;
+// }

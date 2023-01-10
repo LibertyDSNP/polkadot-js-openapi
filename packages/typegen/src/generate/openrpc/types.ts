@@ -1,5 +1,9 @@
 export class ORSchemaComponent {
     name: string;
+
+    constructor() {
+        this.name = "";
+    }
 }
 export class ORSchemaObject extends ORSchemaComponent {
     type: string;
@@ -9,6 +13,8 @@ export class ORSchemaObject extends ORSchemaComponent {
     constructor() {
         super();
         this.type = "object";
+        this.properties = {};
+        this.required = [];
     };
 }
 export class ORSchemaArray extends ORSchemaComponent {
@@ -18,10 +24,16 @@ export class ORSchemaArray extends ORSchemaComponent {
     constructor() {
         super();
         this.type = "array";
+        this.items = {};
     };
 }
 export class ORSchemaType extends ORSchemaComponent {
     type: string;
+
+    constructor() {
+        super();
+        this.type = "";
+    }
 }
 export interface ORParamSchema {
     type?: string;
