@@ -11,7 +11,7 @@ import * as defaultDefinitions from '@polkadot/types/interfaces/definitions';
 import staticSubstrate from '@polkadot/types-support/metadata/static-substrate';
 
 import { createImports, initMeta, readTemplate, writeFile } from '../util';
-import { rpcKeyToOpenRpcMethods, rpcMetadataToJson } from './openrpc/mappings';
+import { metaTypeToSchemaMap, rpcKeyToOpenRpcMethods, rpcMetadataToJson } from './openrpc/mappings';
 import { ORMethod, ORSchemaComponent } from './openrpc/types';
 
 const generateOpenRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
@@ -28,6 +28,10 @@ export function generateOpenRpcTypes(registry: TypeRegistry, importDefinitions: 
       return JSON.stringify(context);
     });
 
+    Handlebars.registerHelper('jsonmap', function (context) {
+      return JSON.stringify(Object.fromEntries(context), null, 3);
+    });
+
     // get all rpc definitions
     const methods: ORMethod[] = Object
       .keys(definitions)
@@ -35,14 +39,7 @@ export function generateOpenRpcTypes(registry: TypeRegistry, importDefinitions: 
       .map((sectionFullName) => rpcKeyToOpenRpcMethods(sectionFullName, definitions))
       .reduce((acc, el) => acc.concat(el));
 
-      const schemas: ORSchemaComponent[] = [];
-      // const schemas: ORSchema[] = Object
-      // .keys(definitions)
-      // .filter((key) => Object.keys(definitions[key].rpc || {}).length !== 0)
-      // .map((sectionFullName) => rpcKeyToOpenRpcSchemas(sectionFullName, definitions))
-      // .reduce((acc, el) => acc.concat(el));
-
-    return rpcMetadataToJson(methods, schemas, generateOpenRpcTypesTemplate);
+    return rpcMetadataToJson(methods, metaTypeToSchemaMap, generateOpenRpcTypesTemplate);
   });
 }
 

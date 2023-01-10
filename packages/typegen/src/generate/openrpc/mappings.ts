@@ -1,6 +1,7 @@
+import { exit } from "yargs";
 import { ORSchemaComponent, ORSchemaType, ORSchemaObject, ORSchemaArray, ORMethod, ORParam, ORParamSchema } from "./types";
 
-let metaTypeToSchemaMap = new Map<string, ORSchemaComponent>([
+export let metaTypeToSchemaMap = new Map<string, ORSchemaComponent>([
   ["bool", { name: "boolean" } as ORSchemaType],
   ["string", { name: "string" } as ORSchemaType],
   ["u8", { name: "integer" } as ORSchemaType],
@@ -33,8 +34,9 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
   });
 }
 
-export function rpcMetadataToJson(methods: ORMethod[], schemas: ORSchemaComponent[], template: (options: {methods: ORMethod[], schemas: ORSchemaComponent[]}) => string): string {
-  const json = template({ methods, schemas });
+export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSchemaComponent>, template: (options: { methods: ORMethod[], schemas: Map<string, ORSchemaComponent> }) => string): string {
+
+  const json = template({ methods, schemas: metaTypeToSchemaMap });
 
   let stringified;
   try {
@@ -50,7 +52,7 @@ export function rpcMetadataToJson(methods: ORMethod[], schemas: ORSchemaComponen
 }
 
 /** @internal */
-export function mapParam(inputParam: {name: string, type: string, isOptional?: boolean}): ORParam {
+export function mapParam(inputParam: { name: string, type: string, isOptional?: boolean }): ORParam {
   console.dir(inputParam);
 
   let [required, inputParamSchema] = metaTypeToSchema(inputParam.type);
@@ -68,7 +70,7 @@ export function mapParam(inputParam: {name: string, type: string, isOptional?: b
 }
 
 function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
-  let schemaComponent:ORSchemaComponent = metaTypeToSchemaMap.get(metaType);
+  let schemaComponent: ORSchemaComponent = metaTypeToSchemaMap.get(metaType);
   let required = true;
   if (schemaComponent === undefined) {
     console.log("Type " + metaType + " doesn't exist.  Try to define it.");
@@ -81,7 +83,7 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
     if (match) {
       console.dir(match);
       let wrappedType = match[1];
-      console.log("Unwrapped "+ currentMetaType + " to " + wrappedType);
+      console.log("Unwrapped " + currentMetaType + " to " + wrappedType);
       required = false;
       currentMetaType = wrappedType;
     }
@@ -90,12 +92,11 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
     match = unwrapType("Vec", currentMetaType);
     if (match) {
       wrappedType = match[1];
-      console.log("Unwrapped "+ currentMetaType + " to " + wrappedType);
+      console.log("Unwrapped " + currentMetaType + " to " + wrappedType);
 
       let array = new ORSchemaArray();
-      array.items = {"$ref": "#/components/schemas/" + wrappedType};
+      array.items = { "$ref": "#/components/schemas/" + wrappedType };
       schemaComponent = array;
-      metaTypeToSchemaMap.set(metaType, schemaComponent);
       currentMetaType = wrappedType;
     }
     else {
@@ -107,17 +108,21 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
     match = unwrapType("Compact", currentMetaType);
     if (match) {
       let wrappedType = match[1];
-      console.log("Unwrapped "+ currentMetaType + " to " + wrappedType);
+      console.log("Unwrapped " + currentMetaType + " to " + wrappedType);
       required = false;
       currentMetaType = wrappedType;
     }
   }
 
+  // Add the processed component to schema components map
+  metaTypeToSchemaMap.set(metaType, schemaComponent);
+
+  // Return the ORParamSchema for use in the params for ORMethod
   if (schemaComponent instanceof ORSchemaType) {
     return [required, { type: schemaComponent.name }];
   }
   else if (schemaComponent instanceof ORSchemaArray) {
-    return [required, {  type: schemaComponent.type, items: schemaComponent.items }];
+    return [required, { type: schemaComponent.type, items: schemaComponent.items }];
   }
   else {
     return [required, { $ref: `#/components/schemas/${schemaComponent.name}` }];
@@ -134,7 +139,7 @@ function unwrapType(wrapper: string, aType: string): RegExpMatchArray | null {
 
 // Unwrap a tuple.  e.g. (u32,u32), etc...
 function unwrapTuple(aType: string): RegExpMatchArray | null {
-  const regex =  /\(([^)]+)\)/;
+  const regex = /\(([^)]+)\)/;
 
   const match = aType.match(regex);
   return match;
