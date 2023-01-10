@@ -35,9 +35,6 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
 }
 
 export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSchemaComponent>, template: (options: { methods: ORMethod[], schemas: Map<string, ORSchemaComponent> }) => string): string {
-
-  console.log("****TEST*****");
-
   var mapAsc = new Map<string, ORSchemaComponent>([...metaTypeToSchemaMap.entries()].sort(
     function (a, b) {
       return a.toLowerCase().localeCompare(b.toLowerCase());
