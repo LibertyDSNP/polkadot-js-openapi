@@ -23,11 +23,12 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
     let type;
    // console.log("\n" + methodName);
     let params: ORParam[] = rpc[methodName].params.map((methodParam: any) => mapParam(methodParam));
-
+    const tags = [{ "name": "rpc" }];
     return {
       pallet: sectionName,
       name: methodName,
       params: params,
+      tags: tags,
       result: type
     } as ORMethod;
   });

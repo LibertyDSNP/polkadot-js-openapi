@@ -17,7 +17,20 @@
           "schema": {{{json schema}}}
         }{{#unless @last}},{{/unless}}
 {{/each}}
-      ]
+      ],
+      "tags": [
+{{#each tags}}
+{
+  "name": "{{name}}"
+}{{#unless @last}},{{/unless}}
+{{/each}}
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+
+        }
+      }
     }{{#unless @last}},{{/unless}}
 {{/each}}
  ],

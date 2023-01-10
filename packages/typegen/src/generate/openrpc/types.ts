@@ -51,6 +51,6 @@ export interface ORMethod {
     pallet?: string;
     name: string;
     params: [];
-    tags: [];
+    tags: [object];
     result?: string;
 }
