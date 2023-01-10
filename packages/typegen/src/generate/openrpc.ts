@@ -12,7 +12,7 @@ import staticSubstrate from '@polkadot/types-support/metadata/static-substrate';
 
 import { createImports, initMeta, readTemplate, writeFile } from '../util';
 import { metaTypeToSchemaMap, rpcKeyToOpenRpcMethods, rpcMetadataToJson } from './openrpc/mappings';
-import { ORMethod, ORSchemaComponent } from './openrpc/types';
+import { ORMethod } from './openrpc/types';
 
 const generateOpenRpcTypesTemplate = Handlebars.compile(readTemplate('openrpc'));
 

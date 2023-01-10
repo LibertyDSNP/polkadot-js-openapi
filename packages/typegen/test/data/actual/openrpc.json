@@ -13,7 +13,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         },
         {
@@ -21,7 +21,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Text"
+            "$ref": "#/components/schemas/Text"
           }
         }
       ]
@@ -34,7 +34,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         }
       ]
@@ -47,7 +47,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Text"
+            "$ref": "#/components/schemas/Text"
           }
         },
         {
@@ -55,7 +55,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Text"
+            "$ref": "#/components/schemas/Text"
           }
         },
         {
@@ -63,7 +63,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         }
       ]
@@ -80,7 +80,10 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<ExtrinsicOrHash>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtrinsicOrHash"
+            }
           }
         }
       ]
@@ -97,7 +100,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Extrinsic"
+            "$ref": "#/components/schemas/Extrinsic"
           }
         }
       ]
@@ -110,7 +113,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Extrinsic"
+            "$ref": "#/components/schemas/Extrinsic"
           }
         }
       ]
@@ -133,9 +136,9 @@
         {
           "name": "hash",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -146,9 +149,9 @@
         {
           "name": "blockNumber",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -163,9 +166,9 @@
         {
           "name": "hash",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -190,7 +193,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/PrefixedStorageKey"
+            "$ref": "#/components/schemas/PrefixedStorageKey"
           }
         },
         {
@@ -198,15 +201,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         }
       ]
@@ -219,7 +222,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/PrefixedStorageKey"
+            "$ref": "#/components/schemas/PrefixedStorageKey"
           }
         },
         {
@@ -227,7 +230,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -235,23 +238,23 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "integer"
+            "$ref": "#/components/schemas/integer"
           }
         },
         {
           "name": "startKey",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         }
       ]
@@ -264,7 +267,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/PrefixedStorageKey"
+            "$ref": "#/components/schemas/PrefixedStorageKey"
           }
         },
         {
@@ -272,15 +275,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         }
       ]
@@ -293,7 +296,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/PrefixedStorageKey"
+            "$ref": "#/components/schemas/PrefixedStorageKey"
           }
         },
         {
@@ -301,15 +304,18 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<StorageKey>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StorageKey"
+            }
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         }
       ]
@@ -322,7 +328,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/PrefixedStorageKey"
+            "$ref": "#/components/schemas/PrefixedStorageKey"
           }
         },
         {
@@ -330,15 +336,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         }
       ]
@@ -351,7 +357,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/PrefixedStorageKey"
+            "$ref": "#/components/schemas/PrefixedStorageKey"
           }
         },
         {
@@ -359,15 +365,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         }
       ]
@@ -380,15 +386,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/ContractCallRequest"
+            "$ref": "#/components/schemas/ContractCallRequest"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -401,7 +407,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/AccountId"
+            "$ref": "#/components/schemas/AccountId"
           }
         },
         {
@@ -409,15 +415,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -430,15 +436,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/InstantiateRequestV1"
+            "$ref": "#/components/schemas/InstantiateRequestV1"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -451,15 +457,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/AccountId"
+            "$ref": "#/components/schemas/AccountId"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -472,15 +478,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/CodeUploadRequest"
+            "$ref": "#/components/schemas/CodeUploadRequest"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -493,7 +499,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         }
       ]
@@ -506,7 +512,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/boolean"
           }
         },
         {
@@ -514,15 +520,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/boolean"
           }
         },
         {
           "name": "parentHash",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -535,15 +541,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         },
         {
           "name": "justification",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Justification"
+            "$ref": "#/components/schemas/Justification"
           }
         }
       ]
@@ -572,7 +578,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         }
       ]
@@ -593,15 +599,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/EthCallRequest"
+            "$ref": "#/components/schemas/EthCallRequest"
           }
         },
         {
           "name": "number",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -622,15 +628,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/EthCallRequest"
+            "$ref": "#/components/schemas/EthCallRequest"
           }
         },
         {
           "name": "number",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -643,7 +649,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         },
         {
@@ -651,15 +657,18 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         },
         {
           "name": "rewardPercentiles",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Option<Vec<f64>>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/f64"
+            }
           }
         }
       ]
@@ -676,15 +685,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H160"
+            "$ref": "#/components/schemas/H160"
           }
         },
         {
           "name": "number",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -697,7 +706,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         },
         {
@@ -705,7 +714,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/boolean"
           }
         }
       ]
@@ -718,7 +727,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         },
         {
@@ -726,7 +735,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/boolean"
           }
         }
       ]
@@ -739,7 +748,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         }
       ]
@@ -752,7 +761,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -765,15 +774,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H160"
+            "$ref": "#/components/schemas/H160"
           }
         },
         {
           "name": "number",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -786,7 +795,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         }
       ]
@@ -799,7 +808,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         }
       ]
@@ -812,7 +821,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/EthFilter"
+            "$ref": "#/components/schemas/EthFilter"
           }
         }
       ]
@@ -825,7 +834,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H160"
+            "$ref": "#/components/schemas/H160"
           }
         },
         {
@@ -833,7 +842,10 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<H256>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/H256"
+            }
           }
         },
         {
@@ -841,7 +853,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -854,7 +866,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H160"
+            "$ref": "#/components/schemas/H160"
           }
         },
         {
@@ -862,15 +874,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         },
         {
           "name": "number",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -883,7 +895,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         },
         {
@@ -891,7 +903,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         }
       ]
@@ -904,7 +916,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         },
         {
@@ -912,7 +924,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         }
       ]
@@ -925,7 +937,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         }
       ]
@@ -938,15 +950,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         },
         {
           "name": "number",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -959,7 +971,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         }
       ]
@@ -972,7 +984,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         },
         {
@@ -980,7 +992,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         }
       ]
@@ -993,7 +1005,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         },
         {
@@ -1001,7 +1013,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         }
       ]
@@ -1014,7 +1026,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         }
       ]
@@ -1027,7 +1039,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -1060,7 +1072,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/EthFilter"
+            "$ref": "#/components/schemas/EthFilter"
           }
         }
       ]
@@ -1081,7 +1093,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         }
       ]
@@ -1094,7 +1106,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/EthTransactionRequest"
+            "$ref": "#/components/schemas/EthTransactionRequest"
           }
         }
       ]
@@ -1107,7 +1119,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         },
         {
@@ -1115,7 +1127,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         }
       ]
@@ -1128,7 +1140,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H64"
+            "$ref": "#/components/schemas/H64"
           }
         },
         {
@@ -1136,7 +1148,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         },
         {
@@ -1144,7 +1156,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/H256"
+            "$ref": "#/components/schemas/H256"
           }
         }
       ]
@@ -1157,15 +1169,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/EthSubKind"
+            "$ref": "#/components/schemas/EthSubKind"
           }
         },
         {
           "name": "params",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/EthSubParams"
+            "$ref": "#/components/schemas/EthSubParams"
           }
         }
       ]
@@ -1182,7 +1194,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/U256"
+            "$ref": "#/components/schemas/U256"
           }
         }
       ]
@@ -1195,7 +1207,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/BlockNumber"
+            "$ref": "#/components/schemas/BlockNumber"
           }
         }
       ]
@@ -1216,15 +1228,18 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<u64>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/u64"
+            }
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1237,15 +1252,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "integer"
+            "$ref": "#/components/schemas/integer"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1258,7 +1273,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKind"
+            "$ref": "#/components/schemas/StorageKind"
           }
         },
         {
@@ -1266,7 +1281,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         }
       ]
@@ -1279,7 +1294,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKind"
+            "$ref": "#/components/schemas/StorageKind"
           }
         },
         {
@@ -1287,7 +1302,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         },
         {
@@ -1295,7 +1310,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         }
       ]
@@ -1308,15 +1323,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1329,15 +1344,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1354,7 +1369,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Text"
+            "$ref": "#/components/schemas/Text"
           }
         },
         {
@@ -1362,15 +1377,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1383,7 +1398,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1391,7 +1406,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1399,7 +1414,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "integer"
+            "$ref": "#/components/schemas/integer"
           }
         },
         {
@@ -1407,15 +1422,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1428,7 +1443,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/PrefixedStorageKey"
+            "$ref": "#/components/schemas/PrefixedStorageKey"
           }
         },
         {
@@ -1436,15 +1451,18 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<StorageKey>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StorageKey"
+            }
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1457,7 +1475,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1465,7 +1483,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1473,7 +1491,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "integer"
+            "$ref": "#/components/schemas/integer"
           }
         },
         {
@@ -1481,15 +1499,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1502,7 +1520,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1510,7 +1528,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1518,7 +1536,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "integer"
+            "$ref": "#/components/schemas/integer"
           }
         },
         {
@@ -1526,15 +1544,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1547,7 +1565,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1555,7 +1573,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1563,7 +1581,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "integer"
+            "$ref": "#/components/schemas/integer"
           }
         },
         {
@@ -1571,15 +1589,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1592,15 +1610,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1613,7 +1631,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
@@ -1621,23 +1639,23 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "integer"
+            "$ref": "#/components/schemas/integer"
           }
         },
         {
           "name": "startKey",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1648,9 +1666,9 @@
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1663,15 +1681,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1684,15 +1702,18 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<StorageKey>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StorageKey"
+            }
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1703,9 +1724,9 @@
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1718,15 +1739,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1739,15 +1760,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1760,15 +1781,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/StorageKey"
+            "$ref": "#/components/schemas/StorageKey"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1781,7 +1802,10 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<StorageKey>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StorageKey"
+            }
           }
         },
         {
@@ -1789,15 +1813,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         },
         {
           "name": "toBlock",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1810,15 +1834,18 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Vec<StorageKey>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StorageKey"
+            }
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1833,9 +1860,12 @@
         {
           "name": "keys",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Vec<StorageKey>"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StorageKey"
+            }
           }
         }
       ]
@@ -1848,15 +1878,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Hash"
+            "$ref": "#/components/schemas/Hash"
           }
         },
         {
           "name": "targets",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/Option<Text>"
+            "$ref": "#/components/schemas/Text"
           }
         },
         {
@@ -1864,7 +1894,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Option<Text>"
+            "$ref": "#/components/schemas/Text"
           }
         },
         {
@@ -1872,7 +1902,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Option<Text>"
+            "$ref": "#/components/schemas/Text"
           }
         }
       ]
@@ -1883,9 +1913,9 @@
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -1898,7 +1928,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/boolean"
           }
         }
       ]
@@ -1911,7 +1941,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/AccountId"
+            "$ref": "#/components/schemas/AccountId"
           }
         }
       ]
@@ -1924,7 +1954,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Text"
+            "$ref": "#/components/schemas/Text"
           }
         }
       ]
@@ -1937,7 +1967,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Text"
+            "$ref": "#/components/schemas/Text"
           }
         }
       ]
@@ -1958,15 +1988,15 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Bytes"
+            "$ref": "#/components/schemas/Bytes"
           }
         },
         {
           "name": "at",
           "description": "",
-          "required": true,
+          "required": false,
           "schema": {
-            "$ref": "#/components/schema/BlockHash"
+            "$ref": "#/components/schemas/BlockHash"
           }
         }
       ]
@@ -2011,7 +2041,7 @@
           "description": "",
           "required": true,
           "schema": {
-            "$ref": "#/components/schema/Text"
+            "$ref": "#/components/schemas/Text"
           }
         }
       ]
@@ -2032,5 +2062,147 @@
       "name": "version",
       "params": []
     }
-  ]
+  ],
+  "components": {
+    "schemas": {
+      "AccountId": {
+        "name": "AccountId"
+      },
+      "BlockHash": {
+        "name": "BlockHash"
+      },
+      "BlockNumber": {
+        "name": "BlockNumber"
+      },
+      "bool": {
+        "name": "boolean"
+      },
+      "Bytes": {
+        "name": "Bytes"
+      },
+      "CodeUploadRequest": {
+        "name": "CodeUploadRequest"
+      },
+      "ContractCallRequest": {
+        "name": "ContractCallRequest"
+      },
+      "EthCallRequest": {
+        "name": "EthCallRequest"
+      },
+      "EthFilter": {
+        "name": "EthFilter"
+      },
+      "EthSubKind": {
+        "name": "EthSubKind"
+      },
+      "EthSubParams": {
+        "name": "EthSubParams"
+      },
+      "EthTransactionRequest": {
+        "name": "EthTransactionRequest"
+      },
+      "Extrinsic": {
+        "name": "Extrinsic"
+      },
+      "H160": {
+        "name": "H160"
+      },
+      "H256": {
+        "name": "H256"
+      },
+      "H64": {
+        "name": "H64"
+      },
+      "Hash": {
+        "name": "Hash"
+      },
+      "i128": {
+        "name": "integer"
+      },
+      "i16": {
+        "name": "integer"
+      },
+      "i32": {
+        "name": "integer"
+      },
+      "i64": {
+        "name": "integer"
+      },
+      "i8": {
+        "name": "integer"
+      },
+      "InstantiateRequestV1": {
+        "name": "InstantiateRequestV1"
+      },
+      "Justification": {
+        "name": "Justification"
+      },
+      "Option<Text>": {
+        "name": "Text"
+      },
+      "Option<Vec<f64>>": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/f64"
+        }
+      },
+      "PrefixedStorageKey": {
+        "name": "PrefixedStorageKey"
+      },
+      "StorageKey": {
+        "name": "StorageKey"
+      },
+      "StorageKind": {
+        "name": "StorageKind"
+      },
+      "string": {
+        "name": "string"
+      },
+      "Text": {
+        "name": "Text"
+      },
+      "u128": {
+        "name": "integer"
+      },
+      "u16": {
+        "name": "integer"
+      },
+      "U256": {
+        "name": "U256"
+      },
+      "u32": {
+        "name": "integer"
+      },
+      "u64": {
+        "name": "integer"
+      },
+      "u8": {
+        "name": "integer"
+      },
+      "Vec<ExtrinsicOrHash>": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ExtrinsicOrHash"
+        }
+      },
+      "Vec<H256>": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/H256"
+        }
+      },
+      "Vec<StorageKey>": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/StorageKey"
+        }
+      },
+      "Vec<u64>": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/u64"
+        }
+      }
+    }
+  }
 }

@@ -1,5 +1,4 @@
-import { exit } from "yargs";
-import { ORSchemaComponent, ORSchemaType, ORSchemaObject, ORSchemaArray, ORMethod, ORParam, ORParamSchema } from "./types";
+import { ORSchemaComponent, ORSchemaType, ORSchemaArray, ORMethod, ORParam, ORParamSchema } from "./types";
 
 export let metaTypeToSchemaMap = new Map<string, ORSchemaComponent>([
   ["bool", { name: "boolean" } as ORSchemaType],
@@ -22,7 +21,7 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
 
   return Object.keys(rpc).map((methodName) => {
     let type;
-    console.log("\n" + methodName);
+   // console.log("\n" + methodName);
     let params: ORParam[] = rpc[methodName].params.map((methodParam: any) => mapParam(methodParam));
 
     return {
@@ -37,7 +36,7 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
 export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSchemaComponent>, template: (options: { methods: ORMethod[], schemas: Map<string, ORSchemaComponent> }) => string): string {
   var mapAsc = new Map<string, ORSchemaComponent>([...metaTypeToSchemaMap.entries()].sort(
     function (a, b) {
-      return a.toLowerCase().localeCompare(b.toLowerCase());
+      return a[0].toLowerCase().localeCompare(b[0].toLowerCase());
     }
   ));
 
@@ -58,7 +57,7 @@ export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSc
 
 /** @internal */
 export function mapParam(inputParam: { name: string, type: string, isOptional?: boolean }): ORParam {
-  console.dir(inputParam);
+ // console.dir(inputParam);
 
   let [required, inputParamSchema] = metaTypeToSchema(inputParam.type);
   // Required can be from the Option<type> or from isOptional.
@@ -75,7 +74,7 @@ export function mapParam(inputParam: { name: string, type: string, isOptional?: 
 }
 
 function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
-  let schemaComponent: ORSchemaComponent = metaTypeToSchemaMap.get(metaType);
+  let schemaComponent: ORSchemaComponent | undefined = metaTypeToSchemaMap.get(metaType);
   let required = true;
   if (schemaComponent === undefined) {
     console.log("Type " + metaType + " doesn't exist.  Try to define it.");
