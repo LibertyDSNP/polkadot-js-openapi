@@ -1,7 +1,6 @@
 import { PortableRegistry, TypeRegistry, Vec } from "@polkadot/types";
 import { ORSchemaComponent, ORSchemaType, ORSchemaArray, ORMethod, ORParam, ORParamSchema } from "./types";
 import { PalletMetadataV14 } from "@polkadot/types/interfaces";
-import { compareName } from "../../util";
 import { stringCamelCase } from "@polkadot/util";
 import { Text } from '@polkadot/types/primitive';
 
@@ -159,7 +158,6 @@ export function extrinsicMetadataToJson(registry: TypeRegistry, lookup: Portable
   const allMethods: object[] = [];
 
   pallets
-    .sort(compareName)
     .filter(({ calls }) => calls.isSome)
     .map(({ calls, name }) => {
       const sectionName = stringCamelCase(name);
@@ -257,7 +255,6 @@ export function extrinsicMetadataToJson(registry: TypeRegistry, lookup: Portable
             params
           };
         })
-        .sort(compareName);
 
       for (const item of items) {
         let description: string = "";
