@@ -18,7 +18,20 @@
         }{{#unless @last}},{{/unless}}
 {{/each}}
       ]
-    }{{#unless @last}},{{/unless}}
+    },
+{{/each}}
+{{#each extrinsics}}
+  {
+    "name": "{{palletName}}_{{method.name}}",
+    "params": [
+      {{#each method.params}}
+        {
+          "name": "{{name}}"
+          {{!-- Need to legibly include param type here --}}
+        }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  }{{#unless @last}},{{/unless}}
 {{/each}}
  ],
  "components": {
