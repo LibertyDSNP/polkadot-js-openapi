@@ -21,18 +21,20 @@ export class ORSchemaArray extends ORSchemaComponent {
     type: string;
     items: {};
 
-    constructor() {
+    constructor(name:string, items:{}) {
         super();
+        this.name = name;
         this.type = "array";
-        this.items = {};
+        this.items = items;
     };
 }
 export class ORSchemaType extends ORSchemaComponent {
     type: string;
 
-    constructor() {
+    constructor(name:string, type:string) {
         super();
-        this.type = "";
+        this.name = name;
+        this.type = type;
     }
 }
 export interface ORParamSchema {
