@@ -1,18 +1,19 @@
 import { ORSchemaComponent, ORSchemaType, ORSchemaArray, ORMethod, ORParam, ORParamSchema } from "./types";
 
 export let metaTypeToSchemaMap = new Map<string, ORSchemaComponent>([
-  ["bool", { name: "boolean" } as ORSchemaType],
-  ["string", { name: "string" } as ORSchemaType],
-  ["u8", { name: "integer" } as ORSchemaType],
-  ["u16", { name: "integer" } as ORSchemaType],
-  ["u32", { name: "integer" } as ORSchemaType],
-  ["u64", { name: "integer" } as ORSchemaType],
-  ["u128", { name: "integer" } as ORSchemaType],
-  ["i8", { name: "integer" } as ORSchemaType],
-  ["i16", { name: "integer" } as ORSchemaType],
-  ["i32", { name: "integer" } as ORSchemaType],
-  ["i64", { name: "integer" } as ORSchemaType],
-  ["i128", { name: "integer" } as ORSchemaType]
+  ["bool", { name: "boolean", type: "boolean" } as ORSchemaType],
+  ["string", { name: "string", type: "string" } as ORSchemaType],
+  ["u8", { name: "u8", type: "integer" } as ORSchemaType],
+  ["u16", { name: "u16", type: "integer" } as ORSchemaType],
+  ["u32", { name: "u32", type: "integer" } as ORSchemaType],
+  ["u64", { name: "u64", type: "integer" } as ORSchemaType],
+  ["u128", { name: "u128", type: "integer" } as ORSchemaType],
+  ["i8", { name: "i8", type: "integer" } as ORSchemaType],
+  ["i16", { name: "i16", type: "integer" } as ORSchemaType],
+  ["i32", { name: "i32", type: "integer" } as ORSchemaType],
+  ["i64", { name: "i64", type: "integer" } as ORSchemaType],
+  ["i128", { name: "i128", type: "integer" } as ORSchemaType],
+  ["Bytes", { name: "Bytes", type: "array", items: { "$ref": "#/components/schemas/u8" } } as ORSchemaArray]
 ]);
 
 export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMethod[] {
@@ -21,7 +22,7 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
 
   return Object.keys(rpc).map((methodName) => {
     let type;
-   // console.log("\n" + methodName);
+    console.log("\n" + methodName);
     let params: ORParam[] = rpc[methodName].params.map((methodParam: any) => mapParam(methodParam));
     const tags = [{ "name": "rpc" }];
     return {
@@ -58,7 +59,7 @@ export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSc
 
 /** @internal */
 export function mapParam(inputParam: { name: string, type: string, isOptional?: boolean }): ORParam {
- // console.dir(inputParam);
+  console.dir(inputParam);
 
   let [required, inputParamSchema] = metaTypeToSchema(inputParam.type);
   // Required can be from the Option<type> or from isOptional.
@@ -117,14 +118,17 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
       required = false;
       currentMetaType = wrappedType;
     }
-  }
 
-  // Add the processed component to schema components map
-  metaTypeToSchemaMap.set(metaType, schemaComponent);
+    // Add the processed component to schema components map
+    metaTypeToSchemaMap.set(metaType, schemaComponent);
+  }
 
   // Return the ORParamSchema for use in the params for ORMethod
   if (schemaComponent instanceof ORSchemaType) {
-    return [required, { type: schemaComponent.name }];
+    if (schemaComponent.name == "string" || schemaComponent.name == "bool") {
+     return [required, { type: schemaComponent.name }];
+    }
+    return [required, { $ref: `#/components/schemas/${schemaComponent.name}` }];
   }
   else if (schemaComponent instanceof ORSchemaArray) {
     return [required, { type: schemaComponent.type, items: schemaComponent.items }];
