@@ -11,18 +11,22 @@ const MAPPED_NAMES: Record<string, string> = {
 };
 
 export let metaTypeToSchemaMap = new Map<string, ORSchemaComponent>([
-  ["bool", { name: "boolean" } as ORSchemaType],
-  ["string", { name: "string" } as ORSchemaType],
-  ["u8", { name: "integer" } as ORSchemaType],
-  ["u16", { name: "integer" } as ORSchemaType],
-  ["u32", { name: "integer" } as ORSchemaType],
-  ["u64", { name: "integer" } as ORSchemaType],
-  ["u128", { name: "integer" } as ORSchemaType],
-  ["i8", { name: "integer" } as ORSchemaType],
-  ["i16", { name: "integer" } as ORSchemaType],
-  ["i32", { name: "integer" } as ORSchemaType],
-  ["i64", { name: "integer" } as ORSchemaType],
-  ["i128", { name: "integer" } as ORSchemaType]
+  ["bool", new ORSchemaType("boolean","boolean") ],
+  ["string", new ORSchemaType("string", "string") ],
+  ["u8", new ORSchemaType("u8", "integer") ],
+  ["u16", new ORSchemaType("u16", "integer") ],
+  ["u32", new ORSchemaType("u32", "integer") ],
+  ["u64", new ORSchemaType("u64", "integer") ],
+  ["u128", new ORSchemaType("u128", "integer") ],
+  ["i8", new ORSchemaType("i8", "integer") ],
+  ["i16", new ORSchemaType("i16", "integer") ],
+  ["i32", new ORSchemaType("i32", "integer") ],
+  ["i64", new ORSchemaType("i64", "integer") ],
+  ["i128", new ORSchemaType("i128", "integer") ],
+  ["f32", new ORSchemaType("f32", "number") ],
+  ["f64", new ORSchemaType("f64", "number") ],
+  ["Bytes", new ORSchemaArray("Bytes", {"$ref": "#/components/schemas/u8"})],
+  ["Text", new ORSchemaType("string","string")]
 ]);
 
 export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMethod[] {
@@ -31,13 +35,14 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
 
   return Object.keys(rpc).map((methodName) => {
     let type;
-   // console.log("\n" + methodName);
+    console.log("\n" + methodName);
     let params: ORParam[] = rpc[methodName].params.map((methodParam: any) => mapParam(methodParam));
-
+    const tags = [{ "name": "rpc" }];
     return {
       pallet: sectionName,
       name: methodName,
       params: params,
+      tags: tags,
       result: type
     } as ORMethod;
   });
@@ -68,7 +73,7 @@ export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSc
 
 /** @internal */
 export function mapParam(inputParam: { name: string, type: string, isOptional?: boolean }): ORParam {
- // console.dir(inputParam);
+  console.dir(inputParam);
 
   let [required, inputParamSchema] = metaTypeToSchema(inputParam.type);
   // Required can be from the Option<type> or from isOptional.
@@ -109,8 +114,7 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
       wrappedType = match[1];
       console.log("Unwrapped " + currentMetaType + " to " + wrappedType);
 
-      let array = new ORSchemaArray();
-      array.items = { "$ref": "#/components/schemas/" + wrappedType };
+      let array = new ORSchemaArray("", { "$ref": "#/components/schemas/" + wrappedType });
       schemaComponent = array;
       currentMetaType = wrappedType;
     }
@@ -127,21 +131,28 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
       required = false;
       currentMetaType = wrappedType;
     }
-  }
 
-  // Add the processed component to schema components map
-  metaTypeToSchemaMap.set(metaType, schemaComponent);
+    // Add the processed component to schema components map
+    metaTypeToSchemaMap.set(metaType, schemaComponent);
+  }
 
   // Return the ORParamSchema for use in the params for ORMethod
+  // console.log("schemaComponent=");
+  // console.dir(schemaComponent);
   if (schemaComponent instanceof ORSchemaType) {
-    return [required, { type: schemaComponent.name }];
-  }
-  else if (schemaComponent instanceof ORSchemaArray) {
-    return [required, { type: schemaComponent.type, items: schemaComponent.items }];
-  }
-  else {
+    console.log("schemaComponent.name=" + schemaComponent.name);
+    if (schemaComponent.name == "string" || schemaComponent.name == "bool") {
+     return [required, { type: schemaComponent.name }];
+    }
     return [required, { $ref: `#/components/schemas/${schemaComponent.name}` }];
   }
+  else if (schemaComponent instanceof ORSchemaArray) {
+    if (schemaComponent.name != "") {
+      return [required, { $ref: `#/components/schemas/${schemaComponent.name}` }];
+    }
+    return [required, { type: schemaComponent.type, items: schemaComponent.items }];
+  }
+  return [required, { $ref: `#/components/schemas/${schemaComponent.name}` }];
 }
 
 export function extrinsicMetadataToJson(registry: TypeRegistry, lookup: PortableRegistry, pallets: Vec<PalletMetadataV14>) {

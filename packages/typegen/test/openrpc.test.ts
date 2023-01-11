@@ -52,7 +52,7 @@ describe('JSON Shape Tests', function () {
       assert.strictEqual(param.name, "foo");
       assert.strictEqual(param.type, "u8");
       assert.notStrictEqual(param.schema, undefined);
-      assert.strictEqual(param.schema?.$ref, "#/components/schemas/integer");
+      assert.strictEqual(param.schema?.$ref, "#/components/schemas/u8");
     });
   })
 });
