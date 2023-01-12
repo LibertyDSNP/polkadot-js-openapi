@@ -39,8 +39,10 @@
     "params": [
       {{#each method.params}}
         {
-          "name": "{{name}}"
-          {{!-- Need to legibly include param type here --}}
+          "name": "{{name}}",
+          "description": "",
+          "required": {{required}},
+          "schema": {{{json type}}}
         }{{#unless @last}},{{/unless}}
       {{/each}}
     ]

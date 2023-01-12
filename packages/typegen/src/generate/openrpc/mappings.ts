@@ -34,7 +34,6 @@ export function rpcKeyToOpenRpcMethods(rpcKey: string, definitions: any): ORMeth
 
   return Object.keys(rpc).map((methodName) => {
     let type;
-    console.log("\n" + methodName);
     let params: ORParam[] = rpc[methodName].params.map((methodParam: any) => mapParam(methodParam));
     const tags = [{ "name": "rpc" }];
     return {
@@ -55,7 +54,6 @@ export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSc
   ));
 
   const json = template({ methods, extrinsics, schemas: mapAsc });
-  console.log(json);
 
   let stringified;
   try {
@@ -72,8 +70,6 @@ export function rpcMetadataToJson(methods: ORMethod[], schemas: Map<string, ORSc
 
 /** @internal */
 export function mapParam(inputParam: { name: string, type: string, isOptional?: boolean }): ORParam {
-  console.dir(inputParam);
-
   let [required, inputParamSchema] = metaTypeToSchema(inputParam.type);
   // Required can be from the Option<type> or from isOptional.
   if (inputParam.isOptional) {
@@ -92,7 +88,6 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
   let schemaComponent: ORSchemaComponent | undefined = metaTypeToSchemaMap.get(metaType);
   let required = true;
   if (schemaComponent === undefined) {
-    console.log("Type " + metaType + " doesn't exist.  Try to define it.");
     let match;
     let currentMetaType = metaType;
     let wrappedType;
@@ -136,10 +131,7 @@ function metaTypeToSchema(metaType: string): [boolean, ORParamSchema] {
   }
 
   // Return the ORParamSchema for use in the params for ORMethod
-  // console.log("schemaComponent=");
-  // console.dir(schemaComponent);
   if (schemaComponent instanceof ORSchemaType) {
-    console.log("schemaComponent.name=" + schemaComponent.name);
     if (schemaComponent.name == "string" || schemaComponent.name == "bool") {
      return [required, { type: schemaComponent.name }];
     }
@@ -182,7 +174,6 @@ export function extrinsicMetadataToJson(registry: TypeRegistry, lookup: Portable
 
           const params = typesInfo
             .map(([name, , typeStr]) => {
-              // console.log('name:' + name + ' typeStr:' + typeStr);
 
               let match;
 
@@ -220,8 +211,6 @@ export function extrinsicMetadataToJson(registry: TypeRegistry, lookup: Portable
               match = unwrapTuple(typeStr);
               if (match) {
                 const values = match[1].split(",");
-                console.log(`Matched tuple ${typeStr} with ${values.length} values: ${match[0]}`);
-                console.log(`Values: ${values}`);
                 typeStr = "array";
                 items = [];
                 for (const v of values) {
@@ -243,10 +232,10 @@ export function extrinsicMetadataToJson(registry: TypeRegistry, lookup: Portable
               const param = {
                 name,
                 required,
-                type: JSON.stringify(schemaObj, null, 1)
+                type: {$ref: schemaObj.type ? schemaObj.type : `#/components/schemas/${schemaObj.name}`}
               };
 
-              return param;
+              return param
             });
 
           return {
@@ -330,10 +319,5 @@ function sanitize(comment: string): string {
       sanitized += ' ';
     }
   }
-
-  // if (comment != sanitized) {
-  //   console.log("BEFORE: |" + comment);
-  //   console.log("AFTER:  |" + sanitized);
-  // }
   return sanitized;
 }

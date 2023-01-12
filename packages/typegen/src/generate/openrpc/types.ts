@@ -1,12 +1,13 @@
 export class ORSchemaComponent {
     name: string;
+    type?: string;
 
     constructor() {
         this.name = "";
     }
 }
 export class ORSchemaObject extends ORSchemaComponent {
-    type: string;
+    override type: string;
     properties: {};
     required: string[];
 
@@ -18,7 +19,7 @@ export class ORSchemaObject extends ORSchemaComponent {
     };
 }
 export class ORSchemaArray extends ORSchemaComponent {
-    type: string;
+    override type: string;
     items: {};
 
     constructor(name:string, items:{}) {
@@ -29,7 +30,7 @@ export class ORSchemaArray extends ORSchemaComponent {
     };
 }
 export class ORSchemaType extends ORSchemaComponent {
-    type: string;
+    override type: string;
 
     constructor(name:string, type:string) {
         super();
